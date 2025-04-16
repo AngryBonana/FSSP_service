@@ -3,84 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход на FindDeal</title>
-    <link type="image/x-icon" rel="shortcut icon" href="All image/favicon.ico">
-    <link rel="stylesheet" href="styles.css">
+    <title>Фотореалистичное перелистывание страниц</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: 'Georgia', serif;
+            perspective: 1200px;
+            height: 100vh;
+            background: #f5f0e5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .book-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            perspective: 2000px;
+        }
+        
+        .book {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+        
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            padding: 50px;
+            background-color: #fffdf8;
+            border: 1px solid #e8e0d0;
+            transform-origin: left center;
+            transition: transform 1.4s cubic-bezier(0.28, 0.55, 0.385, 1);
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 
+                inset 1px 0 3px rgba(0, 0, 0, 0.1),
+                0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* Текстура бумаги */
+        .page::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(rgba(227, 217, 190, 0.3) 0.1em, transparent 0.1em),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 50%, transparent 50%);
+            background-size: 100% 1.5em, 2em 2em;
+            pointer-events: none;
+        }
+        
+        /* Корешок книги */
+        .book::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: -8px;
+            width: 12px;
+            height: calc(100% + 30px);
+            background: linear-gradient(
+                to right, 
+                #6b5d45 0%, 
+                #b8a98a 30%, 
+                #6b5d45 100%
+            );
+            box-shadow: 
+                2px 0 15px rgba(0, 0, 0, 0.4),
+                inset 0 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            border-radius: 2px 0 0 2px;
+        }
+        
+        /* Загнутый уголок (статичная часть) */
+        .page-corner {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, transparent 50%, #f5f0e5 50%);
+            box-shadow: -2px 2px 5px rgba(0,0,0,0.1);
+            z-index: 2;
+            transition: all 1.4s cubic-bezier(0.28, 0.55, 0.385, 1);
+        }
+        
+        /* Анимируемая часть уголка */
+        .page-corner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            transform-origin: right top;
+            transition: transform 1.4s cubic-bezier(0.28, 0.55, 0.385, 1);
+        }
+        
+        /* Состояние уголка при перелистывании */
+        .page.flipping .page-corner::before {
+            transform: rotate(-45deg);
+        }
+        
+        .page.flipping-back .page-corner::before {
+            transform: rotate(0deg);
+        }
+        
+        .page h1 {
+            font-size: 2.8rem;
+            margin-bottom: 40px;
+            color: #4a3c2a;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.05);
+            font-weight: normal;
+        }
+        
+        .page p {
+            font-size: 1.3rem;
+            max-width: 650px;
+            line-height: 1.8;
+            color: #5a4a3a;
+            margin-bottom: 30px;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+        }
+        
+        button {
+            padding: 15px 30px;
+            background: #8a7a60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-family: 'Georgia', serif;
+        }
+        
+        button:hover {
+            background: #6d5d4b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        button:disabled {
+            background: #c4bbae;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Номер страницы */
+        .page-number {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            color: #b3a58d;
+            font-size: 1rem;
+            font-style: italic;
+        }
+        
+        /* Тень от поднимающейся страницы */
+        .page-shadow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, transparent 5%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+        
+        .page.flipping .page-shadow {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
-    <button type="button" class="btn_theme">Другая тема</button>
-    <div class="container">
-        <div class="form-wrapper">
-            <form action="wrapper">
-                <h1>Вход</h1>
-                <div class="input-box">
-                    <input type="text" placeholder="Логин" required>
-                    <img src="All image/light-theme/Login.png" alt="icon-login" width="25" 
-                         data-light="All image/light-theme/Login.png" 
-                         data-dark="All image/dark-theme/Login_d.png">
-                </div>
-                <div class="input-box">
-                    <input type="password" placeholder="Пароль" required>
-                    <img src="All image/light-theme/Password.png" alt="icon-password" width="25"
-                         data-light="All image/light-theme/Password.png"
-                         data-dark="All image/dark-theme/Password_d.png">
-                </div>
-                <div class="remember">
-                    <label for=""><input type="checkbox">Запомнить меня</label>
-                </div>
-                <button type="submit" class="btn">Зайти</button>
-                <div class="registeration">
-                    <a href="../Registration/index.html"><button type="button" class="btn_low">Зарегистрироваться</button></a>
-                </div>
-                <div class="forgot-password">
-                    <a href="../New password 1/index.html"><button type="button" class="btn_low">Восстановить пароль</button></a>
-                </div>
-            </form>
-        </div>
-        <div class="animation-area">
-            <div class="rotating-images">
-                <img src="All image/light-theme/Finder.png" alt="Image 1" class="rotating-image"
-                     data-light="All image/light-theme/Finder.png"
-                     data-dark="All image/dark-theme/Finder_d.png">
-                <img src="All image/light-theme/Document.png" alt="Image 2" class="rotating-image"
-                     data-light="All image/light-theme/Document.png"
-                     data-dark="All image/dark-theme/Document_d.png">
-                <img src="All image/light-theme/Hammer.png" alt="Image 3" class="rotating-image"
-                     data-light="All image/light-theme/Hammer.png"
-                     data-dark="All image/dark-theme/Hammer_d.png">
+    <div class="book-container">
+        <div class="book" id="book">
+            <div class="page" id="page1" data-page="1">
+                <div class="page-corner"></div>
+                <div class="page-shadow"></div>
+                <h1>Старинный Том</h1>
+                <p>Перед вами раскрывается древний фолиант, страницы которого хранят многовековую мудрость.</p>
+                <p>Обратите внимание на реалистичную анимацию перелистывания и загнутый уголок страницы.</p>
+                <div class="page-number">Страница 1</div>
+            </div>
+            <div class="page" id="page2" data-page="2">
+                <div class="page-corner"></div>
+                <div class="page-shadow"></div>
+                <h1>Искусство Книги</h1>
+                <p>Каждое перелистывание сопровождается плавным изгибом страницы и реалистичным движением уголка.</p>
+                <p>Текстура бумаги и тени создают полную иллюзию настоящей книги.</p>
+                <div class="page-number">Страница 2</div>
+            </div>
+            <div class="page" id="page3" data-page="3">
+                <div class="page-corner"></div>
+                <div class="page-shadow"></div>
+                <h1>Магия Страниц</h1>
+                <p>Когда страница поднимается, уголок плавно загибается, а когда опускается — так же плавно разгибается.</p>
+                <p>Попробуйте перелистнуть несколько раз, чтобы оценить плавность анимации.</p>
+                <div class="page-number">Страница 3</div>
+            </div>
+            <div class="page" id="page4" data-page="4">
+                <div class="page-corner"></div>
+                <div class="page-shadow"></div>
+                <h1>Последняя Страница</h1>
+                <p>Вот и подошло к концу наше путешествие по страницам этого фотореалистичного фолианта.</p>
+                <p>Надеемся, вам понравился эффект перелистывания с анимированным уголком.</p>
+                <div class="page-number">Страница 4</div>
             </div>
         </div>
     </div>
+    
+    <div class="controls">
+        <button id="prevBtn">← Назад</button>
+        <button id="nextBtn">Вперед →</button>
+    </div>
+
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const themeToggle = document.querySelector('.btn_theme');
+        const book = document.getElementById('book');
+        const pages = document.querySelectorAll('.page');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
         
-        // Проверяем сохраненную тему
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            setTheme(savedTheme);
-        } else {
-            setTheme('light'); // Устанавливаем светлую тему по умолчанию
-        }
+        let currentPage = 0;
+        const totalPages = pages.length;
+        let isAnimating = false;
         
-        // Обработчик клика
-        themeToggle.addEventListener('click', function() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            setTheme(newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-        
-        // Функция установки темы
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            
-            // Меняем все изображения
-            document.querySelectorAll('[data-light], [data-dark]').forEach(img => {
-                img.src = theme === 'dark' ? img.getAttribute('data-dark') : img.getAttribute('data-light');
+        // Инициализация страниц
+        function initPages() {
+            pages.forEach((page, index) => {
+                // Устанавливаем z-index (первые страницы поверх)
+                page.style.zIndex = totalPages - index;
+                
+                // Позиционируем страницы
+                if (index < currentPage) {
+                    // Уже перелистанные страницы
+                    page.style.transform = 'rotateY(-180deg)';
+                } else {
+                    // Будущие страницы
+                    page.style.transform = 'rotateY(0deg)';
+                }
             });
         }
-    });
+        
+        // Анимация перелистывания
+        function flipPage(direction) {
+            if (isAnimating) return;
+            isAnimating = true;
+            
+            const prevPageIndex = currentPage;
+            
+            if (direction === 'next' && currentPage < totalPages - 1) {
+                currentPage++;
+            } else if (direction === 'prev' && currentPage > 0) {
+                currentPage--;
+            } else {
+                isAnimating = false;
+                return;
+            }
+            
+            const currentPageEl = pages[currentPage];
+            const prevPageEl = pages[prevPageIndex];
+            
+            // Анимация уголка
+            if (direction === 'next') {
+                currentPageEl.classList.add('flipping');
+                setTimeout(() => {
+                    currentPageEl.classList.remove('flipping');
+                }, 1400);
+            } else {
+                prevPageEl.classList.add('flipping-back');
+                setTimeout(() => {
+                    prevPageEl.classList.remove('flipping-back');
+                }, 1400);
+            }
+            
+            // Анимация страницы
+            if (direction === 'next') {
+                prevPageEl.style.transform = 'rotateY(-180deg)';
+            } else {
+                currentPageEl.style.transform = 'rotateY(0deg)';
+            }
+            
+            // Обновляем z-index для правильного порядка наложения
+            pages.forEach((page, index) => {
+                if (index <= currentPage) {
+                    page.style.zIndex = totalPages - index;
+                } else {
+                    page.style.zIndex = index;
+                }
+            });
+            
+            // Задержка перед следующим действием
+            setTimeout(() => {
+                isAnimating = false;
+                updateButtons();
+            }, 1400);
+        }
+        
+        function updateButtons() {
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage === totalPages - 1;
+        }
+        
+        // Обработчики кнопок
+        nextBtn.addEventListener('click', () => flipPage('next'));
+        prevBtn.addEventListener('click', () => flipPage('prev'));
+        
+        // Обработчик скролла
+        window.addEventListener('wheel', (e) => {
+            if (isAnimating) return;
+            
+            if (e.deltaY > 50) {
+                flipPage('next');
+            } else if (e.deltaY < -50) {
+                flipPage('prev');
+            }
+        }, { passive: true });
+        
+        // Обработчик касаний для мобильных устройств
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        document.addEventListener('touchend', (e) => {
+            if (isAnimating) return;
+            
+            touchEndX = e.changedTouches[0].screenX;
+            const diffX = touchEndX - touchStartX;
+            
+            if (diffX < -100) {
+                flipPage('next');
+            } else if (diffX > 100) {
+                flipPage('prev');
+            }
+        }, { passive: true });
+        
+        // Инициализация
+        initPages();
+        updateButtons();
     </script>
 </body>
 </html>

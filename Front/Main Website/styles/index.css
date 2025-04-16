@@ -1,0 +1,102 @@
+/* Reset styles for all elements */
+* {
+  margin: 0;          /* Убираем внешние отступы */
+  padding: 0;         /* Убираем внутренние отступы */
+  box-sizing: border-box; /* Размеры включают padding и border */
+}
+
+/* CSS variables for consistent styling */
+:root {
+  /* Цветовые переменные */
+  --bg-gradient-start: #f5f7fa; /* Начальный цвет градиента */
+  --bg-gradient-end: #c3a5a2;   /* Конечный цвет градиента */
+  --btn-theme-color: rgb(168, 149, 139); /* Цвет кнопок */
+  
+  /* Размерные переменные */
+  --option-height: 500px;       /* Высота карточек */
+  --option-width: 100px;        /* Ширина неактивных карточек */
+  --active-width: 600px;        /* Ширина активной карточки */
+  --radius: 2rem;               /* Скругление углов */
+  --gutter: 20px;               /* Расстояние между карточками */
+  --transition-time: 0.4s;      /* Длительность анимаций */
+}
+
+/* Темная тема */
+[data-theme="dark"] {
+  --bg-gradient-start: #2a2a3a; /* Темный начальный цвет градиента */
+  --bg-gradient-end: #4a2e2e;   /* Темный конечный цвет градиента */
+  --btn-theme-color: rgb(128, 109, 99); /* Темный цвет кнопок */
+}
+
+/* Основные стили body */
+body {
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  min-width: 320px;     /* Минимальная ширина страницы */
+  overflow-x: hidden;    /* Скрываем горизонтальный скролл */
+  height: 100vh;        /* Высота на весь экран */
+  margin: 0;            /* Убираем отступы по умолчанию */
+}
+
+/* Контейнер для всего контента */
+.wrapper {
+  display: flex;        /* Flex-контейнер */
+  height: 100%;         /* На всю высоту body */
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: center;  /* Центрирование по вертикали */
+  padding: 20px;        /* Внутренние отступы */
+  touch-action: pan-y;  /* Разрешаем только вертикальные касания */
+}
+
+/* Контейнер для карточек */
+.options {
+  display: flex;        /* Flex-контейнер */
+  flex-direction: row;  /* Расположение в строку */
+  min-width: 700px;     /* Минимальная ширина */
+  height: var(--option-height); /* Высота из переменной */
+  width: 100%;          /* На всю доступную ширину */
+  scroll-snap-type: x mandatory; /* Привязка при скролле */
+  overflow-x: auto;     /* Горизонтальный скролл */
+  scrollbar-width: none; /* Скрываем скроллбар (Firefox) */
+  gap: var(--gutter);   /* Расстояние между элементами */
+  scroll-behavior: smooth; /* Плавный скролл */
+  align-items: center;  /* Центрирование по вертикали */
+  justify-content: center; /* Центрирование по горизонтали */
+  padding: 55px 0;      /* Внутренние отступы сверху/снизу */
+}
+
+/* Скрываем скроллбар в Chrome/Safari */
+.options::-webkit-scrollbar {
+  display: none;
+}
+
+/* Стили для карточки */
+.option {
+  background-color: color-mix(in srgb, var(--bg), CanvasText 10%);
+  flex: 0 0 var(--option-width); /* Фиксированная ширина */
+  border-radius: var(--radius);  /* Скругленные углы */
+  transition:                    /* Анимации изменений */
+    flex var(--transition-time) cubic-bezier(.17, .84, .44, 1),
+    transform var(--transition-time) ease;
+  background-position: center;   /* Позиционирование фона */
+  background-size: cover;        /* Масштабирование фона */
+  scroll-snap-align: start;      /* Привязка при скролле */
+  position: relative;            /* Для позиционирования потомков */
+  transform-origin: left center; /* Точка трансформации */
+  will-change: transform, flex;  /* Оптимизация анимаций */
+  height: 100%;                 /* На всю высоту контейнера */
+  margin: 0 var(--gutter);      /* Отступы по бокам */
+}
+
+/* Неактивная карточка */
+.option:not(.active) {
+  cursor: pointer;      /* Курсор-указатель */
+  transform: scale(0.95); /* Небольшое уменьшение */
+}
+
+/* Активная карточка */
+.option.active {
+  flex: 0 0 var(--active-width); /* Увеличенная ширина */
+  transform: scale(1.05);       /* Небольшое увеличение */
+  z-index: 2;                  /* На передний план */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Тень */
+}

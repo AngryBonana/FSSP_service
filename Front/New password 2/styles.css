@@ -193,3 +193,66 @@ h1 {
     text-align: center;
     margin-top: 40px;
 }
+
+/* Общие стили */
+:root {
+    /* Светлая тема (текущие цвета) */
+    --bg-gradient-start: #f5f7fa;
+    --bg-gradient-end: #c3a5a2;
+    --form-gradient-start: #f5f7fa;
+    --form-gradient-end: #d8b9b6;
+    --animation-gradient-start: rgb(209, 194, 193);
+    --animation-gradient-end: #c5a4a1;
+    --text-color: #333;
+    --btn-color: #303C4C;
+    --btn-low-color: #7F644B;
+    --btn-theme-color: rgb(168, 149, 139);
+    --input-bg: #f5eae6;
+    --title-color: #764736;
+}
+
+[data-theme="dark"] {
+    /* Темная тема */
+    --bg-gradient-start: #2a2a3a;
+    --bg-gradient-end: #4a2e2e;
+    --form-gradient-start: #3a3a4a;
+    --form-gradient-end: #5a3e3e;
+    --animation-gradient-start: #4a3a3a;
+    --animation-gradient-end: #6a4e4e;
+    --text-color: #f0f0f0;
+    --btn-color: #96a1d1;
+    --btn-low-color: #a68765;
+    --btn-theme-color: rgb(128, 109, 99);
+    --input-bg: #5d4b4b;
+    --title-color: #c4a0a0;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    color: var(--text-color);
+}
+
+.form-wrapper {
+    background: linear-gradient(70deg, var(--form-gradient-start) 0%, var(--form-gradient-end) 100%);
+}
+
+.animation-area {
+    background: linear-gradient(290deg, var(--animation-gradient-start) 0%, var(--animation-gradient-end) 100%);
+}
+
+h1 {
+    color: var(--title-color);
+}
+
+.input-box input {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+.btn_low {
+    background-color: var(--btn-low-color);
+}
+
+.btn_theme {
+    background-color: var(--btn-theme-color);
+}
