@@ -115,44 +115,4 @@ const initOptions = () => {
   }
 };
 
-function navigateToIndex(newIndex) {
-  isAnimating = true;
-  
-  // Плавное скрытие текущей активной карточки
-  if (options[currentIndex]) {
-    options[currentIndex].classList.remove('active');
-    const currentThumb = options[currentIndex].querySelector('.thumbnail');
-    const currentFull = options[currentIndex].querySelector('.full-image');
-    if (currentThumb && currentFull) {
-      currentThumb.style.opacity = 1;
-      currentFull.style.opacity = 0;
-    }
-  }
-  
-  currentIndex = newIndex;
-  
-  // Плавное отображение новой активной карточки
-  if (options[currentIndex]) {
-    options[currentIndex].classList.add('active');
-    const newThumb = options[currentIndex].querySelector('.thumbnail');
-    const newFull = options[currentIndex].querySelector('.full-image');
-    if (newThumb && newFull) {
-      newThumb.style.opacity = 0;
-      newFull.style.opacity = 1;
-    }
-  }
-  
-  // Smooth scroll to the new option
-  options[currentIndex].scrollIntoView({
-    behavior: 'smooth',
-    block: 'nearest',
-    inline: 'center'
-  });
-  
-  // Reset animation flag after transition
-  setTimeout(() => {
-    isAnimating = false;
-  }, 500);
-}
-
 document.addEventListener('DOMContentLoaded', initOptions);
