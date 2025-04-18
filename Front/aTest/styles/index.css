@@ -11,6 +11,8 @@
   --bg-gradient-start: #f5f7fa; /* Начальный цвет градиента */
   --bg-gradient-end: #c3a5a2;   /* Конечный цвет градиента */
   --btn-theme-color: rgb(168, 149, 139); /* Цвет кнопок */
+  --card-gradient-start: #dcd0cf;
+  --card-gradient-end: #b29795;
   
   /* Размерные переменные */
   --option-height: 500px;       /* Высота карточек */
@@ -23,6 +25,8 @@
 
 /* Темная тема */
 [data-theme="dark"] {
+  --card-gradient-start: #3c3a4f;
+  --card-gradient-end: #623d3d;
   --bg-gradient-start: #2a2a3a; /* Темный начальный цвет градиента */
   --bg-gradient-end: #4a2e2e;   /* Темный конечный цвет градиента */
   --btn-theme-color: rgb(128, 109, 99); /* Темный цвет кнопок */
@@ -90,6 +94,7 @@ body {
 .option:not(.active) {
   cursor: pointer;      /* Курсор-указатель */
   transform: scale(0.95); /* Небольшое уменьшение */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Тень */
 }
 
 /* Активная карточка */
@@ -123,4 +128,63 @@ body {
 [data-theme="dark"] .theme-toggle {
   background: #555;
   color: #fff;
+}
+
+.option {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--card-gradient-start) 20%, var(--card-gradient-end) 100%);
+}
+
+.thumbnail, .full-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.thumbnail {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.full-image {
+  opacity: 0;
+  transform: scale(1.1);
+}
+
+.option.active .thumbnail {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.option.active .full-image {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Анимация для неактивных карточек */
+.option:not(.active):hover .thumbnail {
+  transform: scale(1.05);
+}
+
+/* Активная карточка (темная тема) */
+[data-theme="dark"] .option.active{
+  box-shadow: 0 10px 30px #649af180; /* Голубая неоновая тень */
+  border: 3px solid #b7dfec80; /* Голубая неоновая граница */
+}
+
+/* Неактивная карточка (темная тема) */
+[data-theme="dark"] .option:not(.active){
+  box-shadow: 0 10px 30px #6142c780; /* Голубая неоновая тень */
+  border: 3px solid #ab83e380; /* Голубая неоновая граница */
 }
