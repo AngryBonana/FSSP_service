@@ -1,0 +1,3 @@
+dadata
+openai
+requests
