@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная страница</title>
+    <style>
+        .auth-info {
+            background: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Добро пожаловать на наш сайт!</h1>
+    <p>Это главная страница вашего проекта.</p>
+
+    <div class="auth-info">
+        {% if user.is_authenticated %}
+            <p>Вы вошли как: <strong>{{ user.username }}</strong></p>
+            {% if is_admin %}
+                <p>Ваша роль: <span style="color: red;">Администратор</span></p>
+                <a href="/admin/">Перейти в админку</a>
+            {% else %}
+                <p>Ваша роль: Обычный пользователь</p>
+            {% endif %}
+            <a href="{% url 'logout' %}">Выйти</a>
+
+            <p>Сообщение от админа для особых ( . Y . ):.</p>
+            <div class="welcome-message-us">
+                    {{ welcome_us_text }}
+            </div>
+
+        {% else %}
+            <p>Вы не авторизованы</p>
+            <a href="{% url 'login' %}">Войти</a> |
+            <a href="{% url 'register' %}">Зарегистрироваться</a>
+
+            <p>Сообщение от админа для всех:.</p>
+            <div class="welcome-message">
+                {{ welcome_text }}
+            </div>
+        {% endif %}
+    </div>
+
+
+</body>
+</html>

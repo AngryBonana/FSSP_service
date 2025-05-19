@@ -1,0 +1,9 @@
+{% if user.is_authenticated %}
+    <p>Привет, {{ user.username }}!</p>
+    {% if user.is_superuser %}
+        <a href="{% url 'admin_panel' %}">Панель администратора</a>
+    {% endif %}
+    <a href="{% url 'logout' %}">Выйти</a>
+{% else %}
+    <a href="{% url 'login' %}">Войти</a>
+{% endif %}
