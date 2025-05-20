@@ -1,3 +1,4 @@
+from typing import Dict
 from dadata import Dadata
 import os
 from dotenv import load_dotenv
@@ -7,14 +8,16 @@ load_dotenv()
 dadata_key = os.getenv("DADATA_API_KEY")
 
 
-def get_company_info_by_inn(inn: str, api_key: str = dadata_key, secret_key: str = None) -> dict:
-    """
-    Получает данные организации из ЕГРЮЛ по ИНН через API DaData.
+def get_company_info_by_inn(inn: str, api_key: str = dadata_key, secret_key: str = None) -> Dict:
+    """Получает данные организации из ЕГРЮЛ по ИНН через API DaData.
 
-    :param inn: ИНН организации (12 цифр)
-    :param api_key: API-ключ от DaData
-    :param secret_key: Секретный ключ (если нужен)
-    :return: Данные о представителе (ФИО, Должность)
+    Args:
+        inn (str): ИНН организации (12 цифр).
+        api_key (str): API-ключ от DaData.
+        secret_key (str): Секретный ключ (если нужен).
+        
+    Returns:
+        Dict: Словарь с данными о компании, поля: company, inn, address, city, name, post.
     """
     try:
         dadata = Dadata(api_key, secret_key)
