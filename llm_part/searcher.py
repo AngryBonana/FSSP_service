@@ -1,7 +1,9 @@
 import requests
-from typing import List
+import time
 import os
 import json
+from typing import List
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
 
@@ -78,8 +80,47 @@ def create_queries(name: str, company: str, city: str, post: str) -> List[str]:
     return default_queries
     
 
-def google_search(queries: List[str]) -> List[str]:
-    pass
+def google_search(queries: List[str], num_links: int = 5) -> List[str]:
+    """Ищет ссылки на возможные соцсети представителя компании.
+
+    Args:
+        queries (List[str]): Список запросов, по которым будет производиться поиск.
+        num_links (int): Число желаемых ссылок. 
+
+    Returns:
+        List[str]: Список ссылок на возможные соцсети представителя компании.
+    """
+    USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+    links = list()
+    for query in queries:
+        time.sleep(3)
+        query = "+".join(query.split(' '))
+        URL = f"https://www.google.com/search?q={query}"
+        print(URL)
+        headers = {"user-agent": USER_AGENT}
+        try:
+            response = requests.get(url=URL, headers=headers)
+        except Exception as e:
+            print(f"Не удалось обработать запрос. Ошибка: {e}") # TODO: Почему-то не проходит запрос нормально, из-за этого не получается спарсить
+            continue
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, "html.parser")
+            for result in soup.find_all("div", class_=".yuRUbf"):
+                print(100)
+                link = result.find('a')['href']
+                if link.startswith('/url?q='):
+                    link = link[7:].split('&')[0]
+                if not link.startswith('http'):
+                    continue
+                links.append(link)
+    
+    links = list(set(links))
+    if len(links) > num_links:
+        return links[:num_links]
+    return links 
+            
+        
+    
 
 
 def anylize_with_gpt(data):
@@ -92,4 +133,10 @@ if __name__ == "__main__":
     post = "Генеральный Директор"
     city = "Воронеж"
     company = 'ООО "РЕСТОР"'
-    print(create_queries(name, company, city, post))
+    queries = ['Мешков Максим Николаевич Воронеж',
+               'Мешков Максим Николаевич ООО «РЕСТОР»',
+               'Мешков Максим Николаевич Генеральный Директор Воронеж',
+               'Мешков Максим Николаевич профиль в социальных сетях',
+               'ООО «РЕСТОР» Воронеж Максим Мешков Генеральный Директор профиль в соцсетях']
+    print(queries)
+    print(google_search(queries=queries))

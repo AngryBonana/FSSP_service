@@ -1,3 +1,4 @@
 dadata
-openai
 requests
+dotenv
+bs4
