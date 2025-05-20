@@ -1,15 +1,20 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.contrib.auth.models import User
 
 
-class SiteText(models.Model):
-    name = models.CharField('Название текста', max_length=100, unique=True)
-    content = models.TextField('Содержание')
-    updated = models.DateTimeField('Последнее обновление', auto_now=True)
+class Card(models.Model):
+    title = models.CharField(max_length=100, verbose_name="Заголовок")
+    content = models.TextField(verbose_name="Содержание")
+    is_active = models.BooleanField(default=True, verbose_name="Активна")
+    order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Создатель")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Текст сайта'
-        verbose_name_plural = 'Тексты сайта'
+        ordering = ['order']
+        verbose_name = "Карточка"
+        verbose_name_plural = "Карточки"
 
     def __str__(self):
-        return self.name
+        return self.title

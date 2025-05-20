@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FindDeal</title>
+  <link type="image/x-icon" rel="shortcut icon" href="{% static 'All image/favicon.ico' %}">
+  <link rel="stylesheet" href="{% static 'css/mainp_style.css' %}">
+  <script src="{% static 'js/mainp_js.js' %}" defer></script>
+  <script src="{% static 'js/theme.js' %}" defer></script>
+</head>
+<body>
+
+   {% if user.is_authenticated %}
+      <p>Вы вошли как: <strong>{{ user.username }}</strong></p>
+        {% if is_admin %}
+            <p>Ваша роль: <span style="color: red;">Администратор</span></p>
+              <a href="/admin/">Перейти в админку</a>
+        {%endif%}
+   {%endif%}
+
+  <div class="header">
+    <button type="button" class="btn_theme">Другая тема</button>
+  </div>
+  <div class="wrapper">
+    <div class="options">
+    {% for card in cards %}
+    <div class="option {% if forloop.first %}active{% endif %}">
+        <div class="card-content">
+            <h3>{{ card.title }}</h3>
+<!--            <img src="{{ card.image_url }}" alt="{{ card.title }}">-->
+            <div class="card-text">{{ card.content|safe }}</div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+    </div>
+
+</body>
+</html>
