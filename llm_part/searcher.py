@@ -102,7 +102,7 @@ def yandex_search(queries: List[str], num_links: int = 10) -> List[str]:
         try:
             response = requests.get(URL)
         except Exception as e:
-            print(f"Не удалось обработать запрос. Ошибка: {e}") # TODO: Почему-то не проходит запрос нормально, из-за этого не получается спарсить
+            print(f"Не удалось обработать запрос. Ошибка: {e}")
             continue
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, "html.parser")
