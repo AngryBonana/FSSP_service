@@ -5,11 +5,12 @@ import json
 from typing import List
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from googlesearch import search
 
 
 load_dotenv()
 yandex_api_key = os.getenv("YANDEX_API_KEY")
-
+folder_id = os.getenv("FOLDER_ID")
 
 def create_queries(name: str, company: str, city: str, post: str) -> List[str]:
     """Создание поисковых запросов.
@@ -24,9 +25,10 @@ def create_queries(name: str, company: str, city: str, post: str) -> List[str]:
         List[str]: Список из пяти поисковых запросов для поиска представителя компании.
     """
     queries = list()
+    
     try:
         prompt ={
-            "modelUri": "gpt://b1gmogi5kl7jvign6303/yandexgpt",
+            "modelUri": f"gpt://{folder_id}/yandexgpt",
             "completionOptions": {
             "stream": False,
             "temperature": 0.6,
@@ -72,7 +74,7 @@ def create_queries(name: str, company: str, city: str, post: str) -> List[str]:
     default_queries =[
         f"site:vk.com {name} {post} {clear_company} {city}",
         f"site:linkedin.com {name} {post} {clear_company} {city}",
-        f"site:instagram.com {name} {city}",
+        f"{name} {company} {city}",
         f"site:twitter.com {name} {clear_company} {city}",
         f"site:facebook.com {name} {post} {clear_company} {city}",
     ]
@@ -80,7 +82,7 @@ def create_queries(name: str, company: str, city: str, post: str) -> List[str]:
     return default_queries
     
 
-def google_search(queries: List[str], num_links: int = 5) -> List[str]:
+def yandex_search(queries: List[str], num_links: int = 10) -> List[str]:
     """Ищет ссылки на возможные соцсети представителя компании.
 
     Args:
@@ -88,40 +90,31 @@ def google_search(queries: List[str], num_links: int = 5) -> List[str]:
         num_links (int): Число желаемых ссылок. 
 
     Returns:
-        List[str]: Список ссылок на возможные соцсети представителя компании.
+        List[str]: Список ссылок на возможные соцсети и контактные данные представителя компании.
     """
-    USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
     links = list()
+
     for query in queries:
-        time.sleep(3)
-        query = "+".join(query.split(' '))
-        URL = f"https://www.google.com/search?q={query}"
+        print(f"Поиск по запросу {query}")
+        query = "+".join(query.split())
+        URL = f"https://yandex.ru/search/xml/html?folderid={folder_id}&apikey={yandex_api_key}&query=%3C{query}%3E&filter=strict&page=1"
         print(URL)
-        headers = {"user-agent": USER_AGENT}
         try:
-            response = requests.get(url=URL, headers=headers)
+            response = requests.get(URL)
         except Exception as e:
             print(f"Не удалось обработать запрос. Ошибка: {e}") # TODO: Почему-то не проходит запрос нормально, из-за этого не получается спарсить
             continue
         if response.status_code == 200:
-            soup = BeautifulSoup(response.content, "html.parser")
-            for result in soup.find_all("div", class_=".yuRUbf"):
-                print(100)
-                link = result.find('a')['href']
-                if link.startswith('/url?q='):
-                    link = link[7:].split('&')[0]
-                if not link.startswith('http'):
-                    continue
-                links.append(link)
+            soup = BeautifulSoup(response.text, "html.parser")
+            for card in soup.find_all("div", class_="VanillaReact OrganicTitle OrganicTitle_size_l organic__title-wrapper")[:10]:
+                item_link = card.find("a", class_="Link Link_theme_normal OrganicTitle-Link organic__url link")["href"]
+                links.append(item_link)
     
     links = list(set(links))
     if len(links) > num_links:
         return links[:num_links]
     return links 
-            
         
-    
-
 
 def anylize_with_gpt(data):
     pass
@@ -133,10 +126,5 @@ if __name__ == "__main__":
     post = "Генеральный Директор"
     city = "Воронеж"
     company = 'ООО "РЕСТОР"'
-    queries = ['Мешков Максим Николаевич Воронеж',
-               'Мешков Максим Николаевич ООО «РЕСТОР»',
-               'Мешков Максим Николаевич Генеральный Директор Воронеж',
-               'Мешков Максим Николаевич профиль в социальных сетях',
-               'ООО «РЕСТОР» Воронеж Максим Мешков Генеральный Директор профиль в соцсетях']
-    print(queries)
-    print(google_search(queries=queries))
+    queries = create_queries(name, company, city, post)
+    print(yandex_search(queries=queries, num_links=5))
