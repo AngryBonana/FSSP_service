@@ -4,10 +4,6 @@ import os
 from dotenv import load_dotenv
 
 
-load_dotenv()
-dadata_key = os.getenv("DADATA_API_KEY")
-
-
 def get_company_info_by_inn(inn: str, api_key: str, secret_key: str = None) -> Dict:
     """Получает данные организации из ЕГРЮЛ по ИНН через API DaData.
 
@@ -50,6 +46,9 @@ def get_company_info_by_inn(inn: str, api_key: str, secret_key: str = None) -> D
 # Пример использования
 if __name__ == "__main__":
     inn = "3663141298"
+    
+    load_dotenv()
+    dadata_key = os.getenv("DADATA_API_KEY")
 
     company_data = get_company_info_by_inn(inn, api_key=dadata_key)
     print(company_data)

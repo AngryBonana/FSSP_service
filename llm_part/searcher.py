@@ -6,9 +6,6 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
 
-load_dotenv()
-
-
 def create_queries(folder_id:str, yandex_api_key: str, name: str, company: str, city: str, post: str) -> List[str]:
     """Генерирует пять посковых запросов.
     
@@ -191,12 +188,18 @@ def anylize_with_gpt(folder_id: str, yandex_api_key: str, links: List[str], name
 
 # Пример использования
 if __name__ == "__main__":
+    load_dotenv()
+    
     yandex_api_key = os.getenv("YANDEX_API_KEY")
     folder_id = os.getenv("FOLDER_ID")
+    
     name = "Мешков Максим Николаевич"
     post = "Генеральный Директор"
     city = "Воронеж"
     company = 'ООО "РЕСТОР"'
+    
     queries = create_queries(folder_id=folder_id, yandex_api_key=yandex_api_key, name=name, company=company, city=city, post=post)
+    
     links = yandex_search(folder_id=folder_id, yandex_api_key=yandex_api_key, queries=queries, num_links=30)
+    
     print(anylize_with_gpt(folder_id, yandex_api_key, links, name, company, city, post, num_links=10))
