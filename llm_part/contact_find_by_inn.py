@@ -8,7 +8,7 @@ load_dotenv()
 dadata_key = os.getenv("DADATA_API_KEY")
 
 
-def get_company_info_by_inn(inn: str, api_key: str = dadata_key, secret_key: str = None) -> Dict:
+def get_company_info_by_inn(inn: str, api_key: str, secret_key: str = None) -> Dict:
     """Получает данные организации из ЕГРЮЛ по ИНН через API DaData.
 
     Args:
@@ -44,11 +44,12 @@ def get_company_info_by_inn(inn: str, api_key: str = dadata_key, secret_key: str
         return data
     
     except Exception as e:
-        return f"Ошибка при запросе к DaData: {e}"
+        print(f"Ошибка при запросе к DaData: {e}")
+    return None
 
 # Пример использования
 if __name__ == "__main__":
     inn = "3663141298"
 
-    company_data = get_company_info_by_inn(inn)
+    company_data = get_company_info_by_inn(inn, api_key=dadata_key)
     print(company_data)
