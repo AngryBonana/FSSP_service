@@ -319,3 +319,15 @@ h2 {
 .btn-close:hover {
     opacity: 1;
 }
+
+.email-link {
+    color: var(--btn-color);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.email-link:hover {
+    color: var(--btn-low-color);
+    text-decoration: underline;
+}

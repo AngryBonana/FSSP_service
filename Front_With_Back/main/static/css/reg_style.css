@@ -124,33 +124,14 @@ h1 {
 }
 
 /* Стили для кнопки регистрации */
-.btn {
+.btn_low {
     width: 90%;
-    padding: 13px;
+    padding: 12px;
     background-color: #7F644B;
     color: #f9f8f8;
     border: none;
     border-radius: 5px;
     font-size: 16px;
-    cursor: pointer;
-    transition: border-radius 0.3s;
-    text-decoration: none;
-    display: block;
-    text-align: center;
-}
-
-.btn:hover {
-    border-radius: 20px;
-}
-
-.btn_low {
-    width: 60%;
-    padding: 9px;
-    background-color: #736e68;
-    color: #f9f8f8;
-    border: none;
-    border-radius: 10px;
-    font-size: 14px;
     cursor: pointer;
     transition: border-radius 0.3s;
     text-decoration: none;
@@ -184,14 +165,9 @@ h1 {
 }
 
 /* Контейнер для кнопки регистрации */
-.send-code {
-    display: flex;
-    justify-content: center; 
-}
-
-.countinue {
+.registeration {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 80px;
 }
 
 /* Общие стили */
@@ -221,7 +197,7 @@ h1 {
     --animation-gradient-end: #6a4e4e;
     --text-color: #f0f0f0;
     --btn-color: #96a1d1;
-    --btn-low-color: #a68765;
+    --btn-low-color: #8a7a69;
     --btn-theme-color: rgb(128, 109, 99);
     --input-bg: #5d4b4b;
     --title-color: #c4a0a0;

@@ -1,201 +1,384 @@
-/* Reset styles for all elements */
 * {
-  margin: 0;          /* Убираем внешние отступы */
-  padding: 0;         /* Убираем внутренние отступы */
-  box-sizing: border-box; /* Размеры включают padding и border */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* CSS variables for consistent styling */
 :root {
-  /* Цветовые переменные */
-  --bg-gradient-start: #f5f7fa; /* Начальный цвет градиента */
-  --bg-gradient-end: #c3a5a2;   /* Конечный цвет градиента */
-  --btn-theme-color: #a8958b; /* Цвет кнопок */
+  /* Colors */
+  --bg-gradient-start: #f5f7fa;
+  --bg-gradient-end: #c3a5a2;
+  --btn-theme-color: #a8958b;
   --card-gradient-start: #dcd0cf;
   --card-gradient-end: #b29795;
-  --shadow-header:#00000080;
+  --shadow-header: #00000080;
   --shadow-under: #00000080;
   --header-gradient-start: #a78d8a;
-  --header-gradient-end: #8a6e6b; 
+  --header-gradient-end: #8a6e6b;
   --under-gradient-start: #b58b82;
-  --under-gradient-end: #9c6a5e;   
-  
-  /* Размерные переменные */
-  --option-height: 550px;       /* Высота карточек */
-  --option-width: 150px;        /* Ширина неактивных карточек */
-  --active-width: 700px;        /* Ширина активной карточки */
-  --radius: 2rem;               /* Скругление углов */
-  --gutter: 20px;               /* Расстояние между карточками */
-  --transition-time: 0.4s;      /* Длительность анимаций */
+  --under-gradient-end: #9c6a5e;
+
+  /* Sizes */
+  --option-height: 620px;
+  --option-width: 150px;
+  --active-width: 700px;
+  --radius: 2rem;
+  --gutter: 20px;
+  --transition-time: 0.8s;
 }
 
-/* Темная тема */
 [data-theme="dark"] {
   --card-gradient-start: #3c3a4f;
   --card-gradient-end: #623d3d;
-  --bg-gradient-start: #2a2a3a; /* Темный начальный цвет градиента */
-  --bg-gradient-end: #4a2e2e;   /* Темный конечный цвет градиента */
-  --btn-theme-color: rgb(128, 109, 99); /* Темный цвет кнопок */
-  --shadow-header:#649af180;
+  --bg-gradient-start: #2a2a3a;
+  --bg-gradient-end: #4a2e2e;
+  --btn-theme-color: rgb(128, 109, 99);
+  --shadow-header: #649af180;
   --shadow-under: #6946d980;
   --header-gradient-start: #262733;
-  --header-gradient-end: #2e2323; 
+  --header-gradient-end: #2e2323;
   --under-gradient-start: #392a3d;
   --under-gradient-end: #2e1e1e;
-  --btn-theme-color: #63534a; /* Цвет кнопок */
+  --btn-theme-color: #685950;
 }
 
-/* Основные стили body */
 body {
   background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-  min-width: 320px;     /* Минимальная ширина страницы */
-  overflow-x: hidden;    /* Скрываем горизонтальный скролл */
-  height: 100vh;        /* Высота на весь экран */
-  margin: 0;            /* Убираем отступы по умолчанию */
+  min-width: 320px;
+  overflow-x: hidden;
+  height: 100vh;
+  margin: 0;
 }
 
+/* Header styles */
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
   height: 10%;
-  display: flex;          /* Добавляем flex-контейнер */
-  align-items: center;    /* Центрируем элементы по вертикали */
-  background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+  padding: 0 20px;
   box-shadow: 0 5px 30px var(--shadow-header);
-  position: relative;     /* Для абсолютного позиционирования кнопки */
+  background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
 }
 
-.under {
-  height: 10%;
-  height: 10%;
-  display: flex;          /* Добавляем flex-контейнер */
-  align-items: center;    /* Центрируем элементы по вертикали */
-  background: linear-gradient(135deg, var(--under-gradient-start) 0%, var(--under-gradient-end) 100%);
-  box-shadow: 0 7px 30px var(--shadow-under);
-  position: relative;     /* Для абсолютного позиционирования кнопки */
-}
-
-/* Контейнер для всего контента */
-.wrapper {
-  display: flex;        /* Flex-контейнер */
-  height: 80%;         /* На всю высоту body */
-  justify-content: center; /* Центрирование по горизонтали */
-  align-items: center;  /* Центрирование по вертикали */
-  padding: 20px;        /* Внутренние отступы */
-  touch-action: pan-y;  /* Разрешаем только вертикальные касания */
-}
-
-/* Контейнер для карточек */
-.options {
-  display: flex;        /* Flex-контейнер */
-  flex-direction: row;  /* Расположение в строку */
-  min-width: 700px;     /* Минимальная ширина */
-  height: var(--option-height); /* Высота из переменной */
-  width: 100%;          /* На всю доступную ширину */
-  scroll-snap-type: x mandatory; /* Привязка при скролле */
-  overflow-x: auto;     /* Горизонтальный скролл */
-  scrollbar-width: none; /* Скрываем скроллбар (Firefox) */
-  gap: var(--gutter);   /* Расстояние между элементами */
-  scroll-behavior: smooth; /* Плавный скролл */
-  align-items: center;  /* Центрирование по вертикали */
-  justify-content: center; /* Центрирование по горизонтали */
-  padding: 55px 0;      /* Внутренние отступы сверху/снизу */
-}
-
-/* Скрываем скроллбар в Chrome/Safari */
-.options::-webkit-scrollbar {
-  display: none;
-}
-
-/* Стили для карточки */
-.option {
-  background-color: color-mix(in srgb, var(--bg), CanvasText 10%);
-  flex: 0 0 var(--option-width); /* Фиксированная ширина */
-  border-radius: var(--radius);  /* Скругленные углы */
-  transition:                    /* Анимации изменений */
-    flex var(--transition-time) cubic-bezier(.17, .84, .44, 1),
-    transform var(--transition-time) ease;
-  background-position: center;   /* Позиционирование фона */
-  background-size: cover;        /* Масштабирование фона */
-  scroll-snap-align: start;      /* Привязка при скролле */
-  position: relative;            /* Для позиционирования потомков */
-  will-change: transform, flex;  /* Оптимизация анимаций */
-  height: 100%;                 /* На всю высоту контейнера */
-  margin: 0 var(--gutter);      /* Отступы по бокам */
-}
-
-/* Неактивная карточка */
-.option:not(.active) {
-  cursor: pointer;      /* Курсор-указатель */
-  transform: scale(0.95); /* Небольшое уменьшение */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Тень */
-}
-
-/* Активная карточка */
-.option.active {
-  flex: 0 0 var(--active-width); /* Увеличенная ширина */
-  transform: scale(1.05);       /* Небольшое увеличение */
-  z-index: 2;                  /* На передний план */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Тень */
+.logo_main {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .btn_theme {
-  padding: 12px;
+  margin-left: auto;
+  z-index: 2;
+  padding: 12px 24px;
   background-color: var(--btn-theme-color);
   color: #f8f2ef;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s;
-  margin-left: auto;          /*Прижал к правому краю*/
-  margin-right: 2rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .btn_theme:hover {
   background-color: #877772;
-  color: #f4e7de;
 }
 
-[data-theme="dark"] .theme-toggle {
-  background: #555;
-  color: #fff;
+/* Footer styles */
+.under {
+  display: flex;
+  align-items: center;
+  height: 7%;
+  box-shadow: 0 7px 30px var(--shadow-under);
+  background: linear-gradient(135deg, var(--under-gradient-start) 0%, var(--under-gradient-end) 100%);
 }
 
+/* Main content */
+.wrapper {
+  display: block;
+  height: 83%;
+  padding: 0;
+  touch-action: pan-y;
+}
+
+/* Cards container */
+.options {
+  display: flex;
+  flex-direction: row;
+  min-width: 800px;
+  height: var(--option-height);
+  width: 100%;
+  scroll-snap-type: x proximity;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: var(--gutter);
+  scroll-behavior: smooth;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 55px calc(50% - var(--active-width)/2);
+  scroll-padding: 0 calc(50% - var(--active-width)/2);
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.options::-webkit-scrollbar { 
+  display: none; 
+}
+
+/* Card styles */
 .option {
+  flex: 0 0 var(--option-width);
+  height: 100%;
+  border-radius: var(--radius);
+  transition: 
+    flex var(--transition-time) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform var(--transition-time) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.3s ease;
+  scroll-snap-align: center;
   position: relative;
+  will-change: transform, flex;
+  margin: 0 var(--gutter);
+  transform-origin: center center;
+  background: linear-gradient(135deg, var(--card-gradient-start) 20%, var(--card-gradient-end) 100%);
   overflow: hidden;
 }
 
-.card-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--card-gradient-start) 20%, var(--card-gradient-end) 100%);
+.option:not(.active) {
+  cursor: pointer;
+  transform: scale(0.95);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: cardDeactivation var(--transition-time) ease-out forwards;
 }
 
 .option.active {
-  opacity: 0;
-  transform: scale(0.9);
-}
-
-.option.active {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Анимация для неактивных карточек */
-.option:not(.active):hover {
+  flex: 0 0 var(--active-width);
   transform: scale(1.05);
+  z-index: 2;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: cardActivation var(--transition-time) ease-out forwards, fadeIn 0.5s forwards;
 }
 
-/* Активная карточка (темная тема) */
-[data-theme="dark"] .option.active{
-  box-shadow: 0 10px 30px #649af180; /* Голубая неоновая тень */
-  border: 3px solid #b7dfec80; /* Голубая неоновая граница */
+.option:not(.active):hover { 
+  transform: scale(1.05); 
 }
 
-/* Неактивная карточка (темная тема) */
-[data-theme="dark"] .option:not(.active){
-  box-shadow: 0 10px 30px #6142c780; /* Голубая неоновая тень */
-  border: 3px solid #ab83e380; /* Голубая неоновая граница */
+[data-theme="dark"] .option.active {
+  box-shadow: 0 10px 30px #649af180;
+  border: 3px solid #b7dfec80;
+}
+
+[data-theme="dark"] .option:not(.active) {
+  box-shadow: 0 10px 30px #6142c780;
+  border: 3px solid #ab83e380;
+}
+
+/* Card animations */
+@keyframes cardActivation { 
+  0% { transform: scale(0.95); } 
+  100% { transform: scale(1.05); } 
+}
+
+@keyframes cardDeactivation { 
+  0% { transform: scale(1.05); } 
+  100% { transform: scale(0.95); } 
+}
+
+@keyframes fadeIn { 
+  from { opacity: 0.9; transform: scale(0.98); } 
+  to { opacity: 1; transform: scale(1.05); } 
+}
+
+/* Navigation styles */
+nav {
+  margin-left: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+nav > ul {
+  list-style: none;
+  display: flex;
+  position: relative;
+  padding: 0;
+}
+
+nav ul li {
+  position: relative;
+  list-style: none;
+}
+
+nav ul li > a {
+  display: block;
+  padding: 10px 15px;
+  color: #f8f2ef;
+  text-decoration: none;
+  font-size: 16px;
+  transition: all 0.3s;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+nav ul li:hover > a {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Dropdown menu */
+nav ul li ul {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 5px);
+  width: 220px;
+  background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  padding: 10px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(5px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-top: -1px;
+}
+
+nav ul li:hover > ul {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+nav ul li ul li {
+  width: 100%;
+}
+
+nav ul li ul li a {
+  padding: 10px 20px;
+  color: #f8f2ef;
+  display: flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+}
+
+nav ul li ul li a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+nav ul li ul li a p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Admin button */
+.btn_adminka {
+  width: calc(100% - 40px);
+  margin: 0 20px;
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 4px;
+  margin-top: 5px;
+  display: block;
+  background-color: var(--btn-theme-color);
+  color: #f8f2ef;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn_adminka:hover {
+  background-color: #877772;
+  transform: translateY(-2px);
+}
+
+/* Update cards button */
+.btn_update_cards {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  width: 100%;
+}
+
+.btn_update_cards button {
+  padding: 12px 24px;
+  background-color: var(--btn-theme-color);
+  color: #f8f2ef;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn_update_cards button:hover {
+  background-color: #877772;
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .btn_update_cards button,
+[data-theme="dark"] .btn_update_cards button:hover,
+[data-theme="dark"] .btn_adminka,
+[data-theme="dark"] .btn_adminka:hover {
+  background-color: var(--btn-theme-color);
+}
+
+[data-theme="dark"] .btn_update_cards button:hover,
+[data-theme="dark"] .btn_adminka:hover {
+  background-color: #52443c;
+}
+
+/* Loop indicator */
+.loop-indicator {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.7; }
+}
+
+[data-theme="dark"] .loop-indicator {
+  background-color: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Dark theme menu */
+[data-theme="dark"] nav ul li ul {
+  background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] nav ul li > a {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logo_main img {
+    width: 300px;
+  }
+  
+  .header {
+    padding: 0 10px;
+  }
 }

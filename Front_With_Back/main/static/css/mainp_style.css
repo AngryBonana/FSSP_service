@@ -4,7 +4,6 @@
   box-sizing: border-box;
 }
 
-/* CSS variables */
 :root {
   /* Colors */
   --bg-gradient-start: #f5f7fa;
@@ -28,7 +27,6 @@
   --transition-time: 0.8s;
 }
 
-/* Dark theme */
 [data-theme="dark"] {
   --card-gradient-start: #3c3a4f;
   --card-gradient-end: #623d3d;
@@ -44,7 +42,6 @@
   --btn-theme-color: #685950;
 }
 
-/* Body styles */
 body {
   background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
   min-width: 320px;
@@ -53,16 +50,48 @@ body {
   margin: 0;
 }
 
-/* Header and footer */
-.header, .under {
+/* Header styles */
+.header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   position: relative;
+  height: 10%;
+  padding: 0 20px;
   box-shadow: 0 5px 30px var(--shadow-header);
   background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
 }
-.header { height: 10%; }
+
+.logo_main {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.btn_theme {
+  margin-left: auto;
+  z-index: 2;
+  padding: 12px 24px;
+  background-color: var(--btn-theme-color);
+  color: #f8f2ef;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn_theme:hover {
+  background-color: #877772;
+}
+
+/* Footer styles */
 .under {
+  display: flex;
+  align-items: center;
   height: 7%;
   box-shadow: 0 7px 30px var(--shadow-under);
   background: linear-gradient(135deg, var(--under-gradient-start) 0%, var(--under-gradient-end) 100%);
@@ -95,7 +124,10 @@ body {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
-.options::-webkit-scrollbar { display: none; }
+
+.options::-webkit-scrollbar { 
+  display: none; 
+}
 
 /* Card styles */
 .option {
@@ -115,7 +147,6 @@ body {
   overflow: hidden;
 }
 
-/* Inactive card */
 .option:not(.active) {
   cursor: pointer;
   transform: scale(0.95);
@@ -123,7 +154,6 @@ body {
   animation: cardDeactivation var(--transition-time) ease-out forwards;
 }
 
-/* Active card */
 .option.active {
   flex: 0 0 var(--active-width);
   transform: scale(1.05);
@@ -132,80 +162,41 @@ body {
   animation: cardActivation var(--transition-time) ease-out forwards, fadeIn 0.5s forwards;
 }
 
-/* Card animations */
-@keyframes cardActivation { 
-  0% { transform: scale(0.95); } 
-  100% { transform: scale(1.05); } 
-}
-@keyframes cardDeactivation { 
-  0% { transform: scale(1.05); } 
-  100% { transform: scale(0.95); } 
-}
-@keyframes fadeIn { 
-  from { opacity: 0.9; transform: scale(0.98); } 
-  to { opacity: 1; transform: scale(1.05); } 
+.option:not(.active):hover { 
+  transform: scale(1.05); 
 }
 
-/* Hover effects */
-.option:not(.active):hover { transform: scale(1.05); }
-
-/* Dark theme cards */
 [data-theme="dark"] .option.active {
   box-shadow: 0 10px 30px #649af180;
   border: 3px solid #b7dfec80;
 }
+
 [data-theme="dark"] .option:not(.active) {
   box-shadow: 0 10px 30px #6142c780;
   border: 3px solid #ab83e380;
 }
 
-/* Buttons */
-.btn_theme, .btn_update_cards button, .btn_adminka {
-  padding: 12px 24px;
-  background-color: var(--btn-theme-color);
-  color: #f8f2ef;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-.btn_theme {
-  margin-left: auto;
-  margin-right: 2rem;
-}
-.btn_theme:hover, .btn_update_cards button:hover, .btn_adminka:hover {
-  background-color: #877772;
-}
-.btn_update_cards button:hover, .btn_adminka:hover { 
-  transform: translateY(-2px); 
-}
-.btn_update_cards {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 40px;
-  width: 100%;
+/* Card animations */
+@keyframes cardActivation { 
+  0% { transform: scale(0.95); } 
+  100% { transform: scale(1.05); } 
 }
 
-/* Dark theme buttons */
-[data-theme="dark"] .btn_update_cards button,
-[data-theme="dark"] .btn_update_cards button:hover,
-[data-theme="dark"] .btn_adminka,
-[data-theme="dark"] .btn_adminka:hover {
-  background-color: var(--btn-theme-color);
+@keyframes cardDeactivation { 
+  0% { transform: scale(1.05); } 
+  100% { transform: scale(0.95); } 
 }
-[data-theme="dark"] .btn_update_cards button:hover,
-[data-theme="dark"] .btn_adminka:hover {
-  background-color: #52443c;
+
+@keyframes fadeIn { 
+  from { opacity: 0.9; transform: scale(0.98); } 
+  to { opacity: 1; transform: scale(1.05); } 
 }
 
 /* Navigation styles */
 nav {
   margin-left: 2rem;
   position: relative;
-  z-index: 100;
+  z-index: 2;
 }
 
 nav > ul {
@@ -285,7 +276,7 @@ nav ul li ul li a p {
   line-height: 1.4;
 }
 
-/* Admin button in dropdown */
+/* Admin button */
 .btn_adminka {
   width: calc(100% - 40px);
   margin: 0 20px;
@@ -294,20 +285,58 @@ nav ul li ul li a p {
   border-radius: 4px;
   margin-top: 5px;
   display: block;
+  background-color: var(--btn-theme-color);
+  color: #f8f2ef;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Dark theme for menu */
-[data-theme="dark"] nav ul li ul {
-  background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.2);
+.btn_adminka:hover {
+  background-color: #877772;
+  transform: translateY(-2px);
 }
 
-[data-theme="dark"] nav ul li > a {
-  border-color: rgba(255, 255, 255, 0.2);
+/* Update cards button */
+.btn_update_cards {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  width: 100%;
 }
 
-/* Индикатор цикла */
+.btn_update_cards button {
+  padding: 12px 24px;
+  background-color: var(--btn-theme-color);
+  color: #f8f2ef;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn_update_cards button:hover {
+  background-color: #877772;
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .btn_update_cards button,
+[data-theme="dark"] .btn_update_cards button:hover,
+[data-theme="dark"] .btn_adminka,
+[data-theme="dark"] .btn_adminka:hover {
+  background-color: var(--btn-theme-color);
+}
+
+[data-theme="dark"] .btn_update_cards button:hover,
+[data-theme="dark"] .btn_adminka:hover {
+  background-color: #52443c;
+}
+
+/* Loop indicator */
 .loop-indicator {
   position: absolute;
   top: 15px;
@@ -327,8 +356,151 @@ nav ul li ul li a p {
   100% { transform: scale(1); opacity: 0.7; }
 }
 
-/* Для темной темы */
 [data-theme="dark"] .loop-indicator {
   background-color: rgba(0, 0, 0, 0.7);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Dark theme menu */
+[data-theme="dark"] nav ul li ul {
+  background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] nav ul li > a {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logo_main img {
+    width: 300px;
+  }
+  
+  .header {
+    padding: 0 10px;
+  }
+}
+
+/* Добавим в существующие стили */
+
+/* Исправленные стили для карточек */
+.option {
+  flex: 0 0 var(--option-width);
+  height: 100%;
+  border-radius: var(--radius);
+  transition: 
+    flex var(--transition-time) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform var(--transition-time) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  scroll-snap-align: center;
+  position: relative;
+  will-change: transform, flex;
+  margin: 0 var(--gutter);
+  transform-origin: center center;
+  background: linear-gradient(135deg, var(--card-gradient-start) 20%, var(--card-gradient-end) 100%);
+  overflow: hidden;
+  transform: scale(0.95);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.option.active {
+  flex: 0 0 var(--active-width);
+  transform: scale(1.05);
+  z-index: 2;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* Анимации */
+@keyframes cardActivation {
+  0% { 
+    flex: 0 0 var(--option-width);
+    transform: scale(0.95);
+  }
+  100% { 
+    flex: 0 0 var(--active-width);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes cardDeactivation {
+  0% { 
+    flex: 0 0 var(--active-width);
+    transform: scale(1.05);
+  }
+  100% { 
+    flex: 0 0 var(--option-width);
+    transform: scale(0.95);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0.8; }
+  to { opacity: 1; }
+}
+
+/* Содержимое карточки */
+.card-content {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.option.active .card-content {
+  opacity: 1;
+}
+
+.card-content h3 {
+  color: #fff;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.card-text {
+  color: #fff;
+  overflow: auto;
+  flex-grow: 1;
+  padding: 10px;
+}
+
+/* Добавить в конец файла */
+.card-content {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: white;
+}
+
+.option.active .card-content {
+  opacity: 1;
+}
+
+.card-content h3 {
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.card-text {
+  overflow: auto;
+  flex-grow: 1;
+  padding: 10px;
+  line-height: 1.5;
+}
+
+.card-text::-webkit-scrollbar {
+  width: 5px;
+}
+
+.card-text::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3);
+  border-radius: 3px;
 }

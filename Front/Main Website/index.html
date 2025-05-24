@@ -1,3 +1,14 @@
+
+    <!-- {% if user.is_authenticated %}
+      <p>Вы вошли как: <strong>{{ user.username }}</strong></p>
+        {% if is_admin %}
+            <p>Ваша роль: <span style="color: red;">Администратор</span></p>
+            <div class="admin">
+              <a href="/admin/"><button type="button" class="btn_adminka">Перейти в админку</button></a>
+            </div>
+        {%endif%}
+    {%endif%} -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +22,29 @@
 </head>
 <body>
   <div class="header">
+    <nav>
+      <ul>
+        <li>
+          <a href="#">Информация о профиле</a>
+          <ul>
+            <li><a href="#">
+              <p>Имя пользователя: <strong>{{ user.username }}</strong></p>
+            </a></li>
+            <li><a href="#">
+              <p>Роль: Администратор</p>
+            </a></li>
+            <li>
+              <a href="/admin/">
+                <button type="button" class="btn_adminka">Перейти в админку</button>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <div class="logo_main">
+      <img src="../All image/light-theme/Logo_main.png" style="width: 300px" alt="Logo">
+    </div>
     <button type="button" class="btn_theme">Другая тема</button>
   </div>
   <div class="wrapper">
@@ -35,10 +69,37 @@
           
         </div>
       </div>
+      <div class="option">
+        <div class="card-content">
+          
+        </div>
+      </div>
+      <div class="option">
+        <div class="card-content">
+          
+        </div>
+      </div>
+      <div class="option">
+        <div class="card-content">
+          
+        </div>
+      </div>
+      <div class="option">
+        <div class="card-content">
+          
+        </div>
+      </div>
+      <div class="option">
+        <div class="card-content">
+          
+        </div>
+      </div>
+    </div>
+    <div class="btn_update_cards">
+      <button type="button">Обновить</button>
     </div>
   </div>
   <div class="under">
-    
   </div>
 </body>
 </html>

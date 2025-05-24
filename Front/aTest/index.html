@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="color-scheme: light dark;">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,29 @@
   <script src="../scripts/theme.js" defer></script>
 </head>
 <body>
-  <button type="button" class="btn_theme">Другая тема</button>
+  <div class="header">
+    <nav>
+      <ul>
+        <li>
+          <a href="#">Информация о профиле</a>
+          <ul>
+            <li><a href="#">
+              <p>Имя пользователя: <strong>{{ user.username }}</strong></p>
+            </a></li>
+            <li><a href="#">
+              <p>Роль: Администратор</p>
+            </a></li>
+            <li>
+              <a href="/admin/">
+                <button type="button" class="btn_adminka">Перейти в админку</button>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <button type="button" class="btn_theme">Другая тема</button>
+  </div>
   <div class="wrapper">
     <div class="options">
       <div class="option active">
@@ -43,7 +65,27 @@
           
         </div>
       </div>
+      <div class="option">
+        <div class="card-content">
+          
+        </div>
+      </div>
+      <div class="option">
+        <div class="card-content">
+          
+        </div>
+      </div>
+      <div class="option">
+        <div class="card-content">
+          
+        </div>
+      </div>
     </div>
+    <div class="btn_update_cards">
+      <button type="button">Обновить</button>
+    </div>
+  </div>
+  <div class="under">
   </div>
 </body>
 </html>
