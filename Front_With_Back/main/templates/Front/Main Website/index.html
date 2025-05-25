@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FindDeal</title>
   <link type="image/x-icon" rel="shortcut icon" href="{% static 'All image/favicon.ico' %}">
-  <link rel="stylesheet" href="{% static 'css/mainp_style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/mainp_style.css' %}?v={% now 'U' %}">
   <script src="{% static 'js/mainp_js.js' %}" defer></script>
   <script src="{% static 'js/theme.js' %}" defer></script>
 </head>
@@ -53,11 +53,15 @@
         </div>
       {% endfor %}
     </div>
-    <div class="btn_update_cards">
-      <button type="button">Обновить</button>
+  </div>
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
   <div class="under">
+    <button type="button" class="piano-key">Загрузить</button>
   </div>
 </body>
 </html>

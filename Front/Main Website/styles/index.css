@@ -145,6 +145,7 @@ body {
   transform-origin: center center;
   background: linear-gradient(135deg, var(--card-gradient-start) 20%, var(--card-gradient-end) 100%);
   overflow: hidden;
+  color: #333;
 }
 
 .option:not(.active) {
@@ -164,6 +165,10 @@ body {
 
 .option:not(.active):hover { 
   transform: scale(1.05); 
+}
+
+[data-theme="dark"] .option {
+  color: #f8f2ef;
 }
 
 [data-theme="dark"] .option.active {
@@ -276,15 +281,9 @@ nav ul li ul li a p {
   line-height: 1.4;
 }
 
-/* Admin button */
-.btn_adminka {
-  width: calc(100% - 40px);
-  margin: 0 20px;
-  padding: 8px 15px;
-  font-size: 14px;
-  border-radius: 4px;
-  margin-top: 5px;
-  display: block;
+/* Buttons */
+.btn_adminka,
+.btn_update_cards button {
   background-color: var(--btn-theme-color);
   color: #f8f2ef;
   border: none;
@@ -293,12 +292,16 @@ nav ul li ul li a p {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.btn_adminka:hover {
-  background-color: #877772;
-  transform: translateY(-2px);
+.btn_adminka {
+  width: calc(100% - 40px);
+  margin: 0 20px;
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 4px;
+  margin-top: 5px;
+  display: block;
 }
 
-/* Update cards button */
 .btn_update_cards {
   display: flex;
   justify-content: center;
@@ -309,30 +312,25 @@ nav ul li ul li a p {
 
 .btn_update_cards button {
   padding: 12px 24px;
-  background-color: var(--btn-theme-color);
-  color: #f8f2ef;
-  border: none;
   border-radius: 5px;
   font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
+.btn_adminka:hover,
 .btn_update_cards button:hover {
   background-color: #877772;
   transform: translateY(-2px);
 }
 
-[data-theme="dark"] .btn_update_cards button,
-[data-theme="dark"] .btn_update_cards button:hover,
 [data-theme="dark"] .btn_adminka,
-[data-theme="dark"] .btn_adminka:hover {
+[data-theme="dark"] .btn_update_cards button,
+[data-theme="dark"] .btn_adminka:hover,
+[data-theme="dark"] .btn_update_cards button:hover {
   background-color: var(--btn-theme-color);
 }
 
-[data-theme="dark"] .btn_update_cards button:hover,
-[data-theme="dark"] .btn_adminka:hover {
+[data-theme="dark"] .btn_adminka:hover,
+[data-theme="dark"] .btn_update_cards button:hover {
   background-color: #52443c;
 }
 
@@ -361,7 +359,6 @@ nav ul li ul li a p {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
-/* Dark theme menu */
 [data-theme="dark"] nav ul li ul {
   background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
@@ -381,4 +378,108 @@ nav ul li ul li a p {
   .header {
     padding: 0 10px;
   }
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  position: relative;
+  background: linear-gradient(135deg, var(--card-gradient-start) 20%, var(--card-gradient-end) 100%);
+  border-radius: var(--radius);
+  width: 80%;
+  max-width: 900px;
+  max-height: 80vh;
+  padding: 30px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-body {
+  overflow-y: auto;
+  max-height: calc(80vh - 60px);
+  padding-right: 10px;
+  color: #333;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+.modal-body p {
+  margin-bottom: 1em;
+}
+
+.modal-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.modal-body h1,
+.modal-body h2,
+.modal-body h3,
+.modal-body h4,
+.modal-body h5,
+.modal-body h6 {
+  color: inherit;
+}
+
+.modal-body a {
+  color: #3a7bd5;
+}
+
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  z-index: 2;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+[data-theme="dark"] .modal-content {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .modal-body {
+  color: #f8f2ef;
+}
+
+[data-theme="dark"] .modal-body a {
+  color: #64b5f6;
+}
+
+[data-theme="dark"] .modal-close {
+  color: #f8f2ef;
+}
+
+.card-content {
+  color: inherit;
 }

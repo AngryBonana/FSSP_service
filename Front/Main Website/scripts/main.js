@@ -68,7 +68,6 @@ const initOptions = () => {
 
   const navigateToIndex = (targetIndex) => {
     if (isAnimating) return;
-    
     isAnimating = true;
     const prevIndex = currentIndex;
     
@@ -138,6 +137,13 @@ const initOptions = () => {
       const clickedCard = e.target.closest('.option');
       if (!clickedCard || isAnimating) return;
       
+      // Если кликнули на активную карточку - открываем модальное окно
+      if (clickedCard.classList.contains('active')) {
+        openModal(clickedCard);
+        return;
+      }
+      
+      // Иначе продолжаем стандартное поведение
       const clickedIndex = options.indexOf(clickedCard) - VISIBLE_CARDS;
       if (clickedIndex !== currentIndex) {
         navigateToIndex(clickedIndex);
@@ -167,6 +173,32 @@ const initOptions = () => {
     window.addEventListener('resize', () => {
       if (!isAnimating) {
         centerCard(currentIndex + VISIBLE_CARDS, false);
+      }
+    });
+  };
+
+  const openModal = (card) => {
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalBody = document.getElementById('modalBody');
+    
+    // Получаем содержимое карточки
+    const cardContent = card.querySelector('.card-content').innerHTML;
+    
+    // Вставляем содержимое в модальное окно
+    modalBody.innerHTML = cardContent;
+    
+    // Показываем модальное окно
+    modalOverlay.style.display = 'flex';
+    
+    // Добавляем обработчик закрытия
+    document.querySelector('.modal-close').addEventListener('click', () => {
+      modalOverlay.style.display = 'none';
+    });
+    
+    // Закрытие по клику вне модального окна
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.style.display = 'none';
       }
     });
   };
