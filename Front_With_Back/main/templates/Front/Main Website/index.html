@@ -43,7 +43,7 @@
     <button type="button" class="btn_theme">Другая тема</button>
   </div>
   <div class="wrapper">
-    <div class="options">
+    <div class="options {% if cards|length < 6 %}compact-mode{% else %}extended-mode{% endif %}">
       {% for card in cards %}
         <div class="option {% if forloop.first %}active{% endif %}">
           <div class="card-content">
