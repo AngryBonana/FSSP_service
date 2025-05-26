@@ -54,14 +54,15 @@ def home(request):
         context['username'] = request.user.username
         context['is_admin'] = request.user.is_superuser
 
-    cards = Card.objects.filter(is_active=True).order_by('order')
-    for i in cards:
-        # i is the object of class Card
-        # we can do with it all what we want
-        # ex: i.tile
-        # When this methods calls we should take all data about companies from DB
-        # and then sieve it from filters and set list of true cards to content['cards'] and return it to user
-        pass
+    # Получаем все активные карточки, отсортированные по дате парсинга и порядку
+    cards = Card.objects.filter(is_active=True).order_by('-parsed_date', 'order')
+    
+    # Добавляем дополнительную информацию для каждой карточки
+    for card in cards:
+        card.parsed_date_formatted = card.parsed_date.strftime("%d.%m.%Y %H:%M")
+        if card.source_url:
+            card.source_domain = card.source_url.split('/')[2] if len(card.source_url.split('/')) > 2 else ''
+    
     context['cards'] = cards
     return render(request, 'Front/Main Website/index.html', context)
 

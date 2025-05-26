@@ -3,10 +3,11 @@ from .models import Card
 
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_active', 'order', 'created_at')
-    list_editable = ('is_active', 'order')
+    list_display = ('title', 'external_id', 'created_at', 'is_active')
     list_filter = ('is_active', 'created_at')
-    search_fields = ('title', 'content')
+    search_fields = ('title', 'content', 'external_id')
+    readonly_fields = ('created_at', 'created_by')
+    ordering = ('-created_at',)
     fieldsets = (
         (None, {
             'fields': ('title', 'content', 'is_active', 'order')

@@ -126,3 +126,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # для разработ
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Настройки для kad.arbitr.ru API
+KAD_API_KEY = "4be007efb8211835aab02a6a7ec1cec7"  # Ваш API ключ
+KAD_MAX_REQUESTS = 17  # Оставшееся количество запросов
+
