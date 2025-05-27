@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-nn06w=2axomlj%mn0xm4-qp&dy8*rmb9hf-7t^0bj8#s4mhhm%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # Разрешаем все хосты для Docker
 
 
 # Application definition
@@ -130,16 +130,19 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # для разработ
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-KAD_API_KEY = "c5ea214946e91d193ab47220c877e435&CaseNumber=А82-4356%2F2014"  # Ваш API ключ
+# API Keys
+ARBIR_API_KEY = os.getenv('ARBIR_API_KEY', 'c5ea214946e91d193ab47220c877e435')  # Ваш API ключ
 KAD_MAX_REQUESTS = 17  # Оставшееся количество запросов
 
-YANDEX_API_KEY = 'AQVNx5MHmH5Hqfhqm3RIXam8xy1zE3SN1seiCNZF'
-FOLDER_ID = 'b1gmogi5kl7jvign6303'
+YANDEX_API_KEY = os.getenv('YANDEX_API_KEY', 'AQVNx5MHmH5Hqfhqm3RIXam8xy1zE3SN1seiCNZF')
+FOLDER_ID = os.getenv('FOLDER_ID', 'b1gmogi5kl7jvign6303')
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_BEAT_SCHEDULE = {
     'run-daily-parser': {
-        'task': 'your_app.tasks.run_arbitr_parser',
+        'task': 'main.services.tasks.run_arbitr_parser',
         'schedule': crontab(hour=8, minute=0),  # Каждый день в 8:00
     },
 }

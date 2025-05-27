@@ -9,9 +9,9 @@ class Card(models.Model):
     Name = models.TextField(verbose_name="Имя")
     Address = models.TextField(verbose_name="Адрес")
     source_url = models.URLField(verbose_name="URL источника", blank=True, null=True)
-    parsed_date = models.DateTimeField(verbose_name="Дата парсинга")
+    parsed_date = models.DateTimeField(verbose_name="Дата парсинга", default=timezone.now)
     external_id = models.CharField(max_length=100, blank=True, null=True, verbose_name="Внешний ID")
-    is_active = models.BooleanField(default=True, verbose_name="Актвна")
+    is_active = models.BooleanField(default=True, verbose_name="Активна")
     order = models.PositiveIntegerField(default=0, verbose_name="Порядок")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Создатель")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -23,7 +23,6 @@ class Card(models.Model):
         verbose_name="ИНН"
     )
     class Meta:
-        ordering = ['order']
         ordering = ['-parsed_date', 'order']
         verbose_name = "Карточка"
         verbose_name_plural = "Карточки"
