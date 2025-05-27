@@ -1,158 +1,354 @@
 const initOptions = () => {
-  const optionsContainer = document.querySelector('.options');
-  const options = document.querySelectorAll('.option');
-  let currentIndex = 0;
-  let isAnimating = false;
-  let scrollTimeout;
+    const optionsContainer = document.querySelector('.options');
+    if (!optionsContainer) return;
 
-  // Set CSS variable with total options count
-  optionsContainer.style.setProperty('--total-options', options.length);
+    const originalOptions = Array.from(document.querySelectorAll('.option:not(.clone)'));
+    if (originalOptions.length === 0) return;
 
-  // Initialize first option as active
-  options[0].classList.add('active');
+    // Определяем режим работы в зависимости от количества карточек
+    const isCompactMode = originalOptions.length < 6;
 
-  // Click handler
-  optionsContainer.addEventListener('click', (event) => {
-    const clickedOption = event.target.closest('.option');
-    if (!clickedOption || isAnimating) return;
-
-    const clickedIndex = Array.from(options).indexOf(clickedOption);
-    if (clickedIndex !== currentIndex) {
-      navigateToIndex(clickedIndex);
+    if (isCompactMode) {
+        initCompactCarousel(originalOptions, optionsContainer);
+    } else {
+        initExtendedCarousel(originalOptions, optionsContainer);
     }
-  });
 
-  // Improved scroll handler with momentum
-  optionsContainer.addEventListener('scroll', () => {
-    if (isAnimating) return;
-
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      const newIndex = findClosestSnapIndex();
-      if (newIndex !== currentIndex) {
-        navigateToIndex(newIndex);
-      }
-    }, 100);
-  }, { passive: true });
-
-  // Wheel handler for fast scrolling
-  optionsContainer.addEventListener('wheel', (e) => {
-    if (isAnimating) return;
-
-    e.preventDefault();
-    const direction = Math.sign(e.deltaY);
-    const newIndex = Math.max(0, Math.min(currentIndex + direction, options.length - 1));
-
-    if (newIndex !== currentIndex) {
-      navigateToIndex(newIndex);
-    }
-  }, { passive: false });
-
-  // Touch handlers for mobile
-  let touchStartX = 0;
-
-  optionsContainer.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-
-  optionsContainer.addEventListener('touchend', (e) => {
-    if (isAnimating) return;
-
-    const touchEndX = e.changedTouches[0].clientX;
-    const diffX = touchEndX - touchStartX;
-
-    if (Math.abs(diffX) > 50) {
-      const direction = Math.sign(diffX) * -1; // Inverse for natural swipe
-      const newIndex = Math.max(0, Math.min(currentIndex + direction, options.length - 1));
-
-      if (newIndex !== currentIndex) {
-        navigateToIndex(newIndex);
-      }
-    }
-  }, { passive: true });
-
-  function findClosestSnapIndex() {
-    const containerRect = optionsContainer.getBoundingClientRect();
-    const containerCenter = containerRect.left + containerRect.width / 2;
-
-    let closestIndex = 0;
-    let minDistance = Infinity;
-
-    options.forEach((option, index) => {
-      const optionRect = option.getBoundingClientRect();
-      const optionCenter = optionRect.left + optionRect.width / 2;
-      const distance = Math.abs(optionCenter - containerCenter);
-
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = index;
-      }
-    });
-
-    return closestIndex;
-  }
-
-  function navigateToIndex(newIndex) {
-    isAnimating = true;
-    currentIndex = newIndex;
-
-    // Update active class
-    options.forEach((option, index) => {
-      option.classList.toggle('active', index === currentIndex);
-    });
-
-    // Smooth scroll to the new option
-    options[currentIndex].scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'center'
-    });
-
-    // Reset animation flag after transition
-    setTimeout(() => {
-      isAnimating = false;
-    }, 400);
-  }
+    // Инициализация модального окна (общая для обоих режимов)
+    initModal();
 };
 
-function navigateToIndex(newIndex) {
-  isAnimating = true;
+// Инициализация модального окна
+const initModal = () => {
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalBody = document.getElementById('modalBody');
 
-  // Плавное скрытие текущей активной карточки
-  if (options[currentIndex]) {
-    options[currentIndex].classList.remove('active');
-    const currentThumb = options[currentIndex].querySelector('.thumbnail');
-    const currentFull = options[currentIndex].querySelector('.full-image');
-    if (currentThumb && currentFull) {
-      currentThumb.style.opacity = 1;
-      currentFull.style.opacity = 0;
-    }
-  }
+    if (!modalOverlay || !modalBody) return;
 
-  currentIndex = newIndex;
+    const openModal = (card) => {
+        const cardContent = card.querySelector('.card-content').cloneNode(true);
+        const cardText = cardContent.querySelector('.card-text');
 
-  // Плавное отображение новой активной карточки
-  if (options[currentIndex]) {
-    options[currentIndex].classList.add('active');
-    const newThumb = options[currentIndex].querySelector('.thumbnail');
-    const newFull = options[currentIndex].querySelector('.full-image');
-    if (newThumb && newFull) {
-      newThumb.style.opacity = 0;
-      newFull.style.opacity = 1;
-    }
-  }
+        if (cardText) {
+            cardText.style.display = 'block';
+            cardText.style.webkitLineClamp = 'unset';
+            cardText.style.overflowY = 'auto';
+        }
 
-  // Smooth scroll to the new option
-  options[currentIndex].scrollIntoView({
-    behavior: 'smooth',
-    block: 'nearest',
-    inline: 'center'
-  });
+        modalBody.innerHTML = '';
+        modalBody.appendChild(cardContent);
+        modalOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    };
 
-  // Reset animation flag after transition
-  setTimeout(() => {
-    isAnimating = false;
-  }, 500);
-}
+    const closeModal = () => {
+        modalOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', handleEscape);
+    };
+
+    const handleEscape = (e) => e.key === 'Escape' && closeModal();
+
+    document.querySelector('.modal-close')?.addEventListener('click', closeModal);
+    document.addEventListener('keydown', handleEscape);
+    modalOverlay.addEventListener('click', (e) => e.target === modalOverlay && closeModal());
+
+    // Добавляем обработчик клика только на активные карточки
+    document.addEventListener('click', (e) => {
+        const activeCard = e.target.closest('.option.active');
+        if (activeCard && !e.target.closest('.modal-content')) {
+            openModal(activeCard);
+        }
+    });
+};
+
+// Режим для <6 карточек (компактный)
+const initCompactCarousel = (originalOptions, container) => {
+    let currentIndex = 0;
+    let isAnimating = false;
+    const ANIMATION_DURATION = 800;
+    let scrollTimeout;
+
+    // Активируем карточку по индексу с анимацией
+    const activateCard = (index) => {
+        if (isAnimating) return;
+
+        isAnimating = true;
+        const prevIndex = currentIndex;
+        currentIndex = (index + originalOptions.length) % originalOptions.length;
+
+        // Анимация для предыдущей активной карточки
+        if (originalOptions[prevIndex]) {
+            originalOptions[prevIndex].classList.remove('active');
+            originalOptions[prevIndex].style.flex = '0 0 var(--option-width)';
+        }
+
+        // Анимация для новой активной карточки
+        originalOptions[currentIndex].classList.add('active');
+        originalOptions[currentIndex].style.flex = '0 0 var(--active-width)';
+
+        // Центрируем активную карточку
+        centerCard(currentIndex);
+
+        setTimeout(() => isAnimating = false, ANIMATION_DURATION);
+    };
+
+    // Центрирование карточки в контейнере
+    const centerCard = (index) => {
+        const card = originalOptions[index];
+        if (!card) return;
+
+        const containerWidth = container.offsetWidth;
+        const cardWidth = card.offsetWidth;
+        const scrollPos = card.offsetLeft - (containerWidth / 2) + (cardWidth / 2);
+
+        container.scrollTo({
+            left: scrollPos,
+            behavior: 'smooth'
+        });
+    };
+
+    // Находим ближайшую карточку к центру
+    const findClosestCard = () => {
+        const containerCenter = container.scrollLeft + (container.offsetWidth / 2);
+
+        let closestIndex = 0;
+        let minDistance = Infinity;
+
+        originalOptions.forEach((card, index) => {
+            const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+            const distance = Math.abs(cardCenter - containerCenter);
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestIndex = index;
+            }
+        });
+
+        return closestIndex;
+    };
+
+    // Обработка кликов по карточкам
+    const setupCardClickHandlers = () => {
+        container.addEventListener('click', (e) => {
+            const clickedCard = e.target.closest('.option');
+            if (!clickedCard || isAnimating) return;
+
+            const clickedIndex = originalOptions.indexOf(clickedCard);
+            if (clickedIndex !== -1 && clickedIndex !== currentIndex) {
+                e.stopPropagation(); // Предотвращаем всплытие события
+                activateCard(clickedIndex);
+            }
+        });
+    };
+
+    // Обработка скролла
+    const setupScrollHandlers = () => {
+        container.addEventListener('scroll', () => {
+            if (isAnimating) return;
+
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const newIndex = findClosestCard();
+                if (newIndex !== currentIndex) {
+                    activateCard(newIndex);
+                }
+            }, 100);
+        }, { passive: true });
+
+        // Обработка колесика мыши/тачпада
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (isAnimating) return;
+
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                activateCard(currentIndex + Math.sign(e.deltaX));
+            } else {
+                activateCard(currentIndex + Math.sign(e.deltaY));
+            }
+        }, { passive: false });
+
+        // Обработка тач-событий
+        let touchStartX = 0;
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        container.addEventListener('touchend', (e) => {
+            if (isAnimating) return;
+            const diffX = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diffX) > 50) {
+                activateCard(currentIndex + Math.sign(diffX));
+            }
+        }, { passive: true });
+    };
+
+    // Инициализация компактного режима
+    originalOptions.forEach((card, i) => {
+        card.style.flex = i === 0 ? '0 0 var(--active-width)' : '0 0 var(--option-width)';
+        card.classList.toggle('active', i === 0);
+    });
+
+    setupCardClickHandlers();
+    setupScrollHandlers();
+
+    // Центрируем первую карточку
+    setTimeout(() => centerCard(0), 100);
+};
+
+// Режим для ≥6 карточек (расширенный с клонированием)
+const initExtendedCarousel = (originalOptions, container) => {
+    const VISIBLE_CARDS = Math.min(7, originalOptions.length);
+    const ANIMATION_DURATION = 800;
+    let currentIndex = 0;
+    let isAnimating = false;
+    let ignoreScroll = false;
+    let scrollTimeout;
+
+    // Добавляем метку на первую карточку
+    const addLoopIndicator = () => {
+        const indicator = document.createElement('div');
+        indicator.className = 'loop-indicator';
+        originalOptions[0].appendChild(indicator);
+    };
+
+    // Клонируем карточки для бесшовности
+    const cloneCards = () => {
+        originalOptions.forEach(card => card.classList.add('original'));
+
+        // Клонируем последние VISIBLE_CARDS карточек в начало
+        for (let i = 0; i < VISIBLE_CARDS; i++) {
+            const clone = originalOptions[originalOptions.length - 1 - i].cloneNode(true);
+            clone.classList.add('clone');
+            clone.classList.remove('active');
+            container.insertBefore(clone, container.firstChild);
+        }
+
+        // Клонируем первые VISIBLE_CARDS карточек в конец
+        for (let i = 0; i < VISIBLE_CARDS; i++) {
+            const clone = originalOptions[i].cloneNode(true);
+            clone.classList.add('clone');
+            clone.classList.remove('active');
+            container.appendChild(clone);
+        }
+    };
+
+    const getAllCards = () => Array.from(document.querySelectorAll('.option'));
+
+    const activateCard = (index) => {
+        const allCards = getAllCards();
+        allCards.forEach((card, i) => {
+            card.classList.toggle('active', i === index);
+        });
+        currentIndex = (index - VISIBLE_CARDS + originalOptions.length) % originalOptions.length;
+    };
+
+    const centerCard = (index, smooth = true) => {
+        if (ignoreScroll) return;
+
+        const allCards = getAllCards();
+        const card = allCards[index];
+        const containerWidth = container.offsetWidth;
+        const cardWidth = card.offsetWidth;
+        const scrollPos = card.offsetLeft - (containerWidth / 2) + (cardWidth / 2);
+
+        container.scrollTo({
+            left: scrollPos,
+            behavior: smooth ? 'smooth' : 'auto'
+        });
+    };
+
+    const navigateToIndex = (targetIndex) => {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        let newIndex = (targetIndex + originalOptions.length) % originalOptions.length;
+        const displayIndex = newIndex + VISIBLE_CARDS;
+
+        activateCard(displayIndex);
+        centerCard(displayIndex, true);
+
+        if (targetIndex < 0 || targetIndex >= originalOptions.length) {
+            setTimeout(() => {
+                ignoreScroll = true;
+                centerCard(newIndex + VISIBLE_CARDS, false);
+                setTimeout(() => ignoreScroll = false, 50);
+                isAnimating = false;
+            }, ANIMATION_DURATION);
+        } else {
+            setTimeout(() => isAnimating = false, ANIMATION_DURATION);
+        }
+    };
+
+    const findClosestCard = () => {
+        const allCards = getAllCards();
+        const containerCenter = container.scrollLeft + (container.offsetWidth / 2);
+
+        let closestIndex = 0;
+        let minDistance = Infinity;
+
+        allCards.forEach((card, index) => {
+            const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+            const distance = Math.abs(cardCenter - containerCenter);
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestIndex = index;
+            }
+        });
+
+        return closestIndex - VISIBLE_CARDS;
+    };
+
+    const setupEventListeners = () => {
+        container.addEventListener('click', (e) => {
+            const clickedCard = e.target.closest('.option');
+            if (!clickedCard || isAnimating) return;
+
+            const allCards = getAllCards();
+            const clickedIndex = allCards.indexOf(clickedCard) - VISIBLE_CARDS;
+            if (clickedIndex !== currentIndex) {
+                e.stopPropagation(); // Предотвращаем всплытие события
+                navigateToIndex(clickedIndex);
+            }
+        });
+
+        container.addEventListener('scroll', () => {
+            if (isAnimating || ignoreScroll) return;
+
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const newIndex = findClosestCard();
+                navigateToIndex(newIndex);
+            }, 100);
+        }, { passive: true });
+
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (isAnimating) return;
+            navigateToIndex(currentIndex + Math.sign(e.deltaY));
+        }, { passive: false });
+
+        let touchStartX = 0;
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        container.addEventListener('touchend', (e) => {
+            if (isAnimating) return;
+            const diffX = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diffX) > 50) {
+                navigateToIndex(currentIndex + Math.sign(diffX));
+            }
+        }, { passive: true });
+    };
+
+    // Инициализация расширенного режима
+    addLoopIndicator();
+    cloneCards();
+    activateCard(VISIBLE_CARDS);
+    centerCard(VISIBLE_CARDS, false);
+    setupEventListeners();
+};
 
 document.addEventListener('DOMContentLoaded', initOptions);

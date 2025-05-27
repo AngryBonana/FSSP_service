@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,16 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'FSSP_site.urls'
 
@@ -126,3 +130,16 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # для разработ
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+KAD_API_KEY = "4be007efb8211835aab02a6a7ec1cec7"  # Ваш API ключ
+KAD_MAX_REQUESTS = 17  # Оставшееся количество запросов
+
+YANDEX_API_KEY = 'AQVNx5MHmH5Hqfhqm3RIXam8xy1zE3SN1seiCNZF'
+FOLDER_ID = 'b1gmogi5kl7jvign6303'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BEAT_SCHEDULE = {
+    'run-daily-parser': {
+        'task': 'your_app.tasks.run_arbitr_parser',
+        'schedule': crontab(hour=8, minute=0),  # Каждый день в 8:00
+    },
+}

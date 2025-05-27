@@ -13,6 +13,9 @@
     --btn-theme-color: rgb(168, 149, 139);
     --input-bg: #f5eae6;
     --title-color: #764736;
+
+    --btn-tech-color: #86817c;
+    --bg-tech-window: #f5eae6;
 }
 
 [data-theme="dark"] {
@@ -29,6 +32,9 @@
     --btn-theme-color: rgb(128, 109, 99);
     --input-bg: #5d4b4b;
     --title-color: #c4a0a0;
+
+    --btn-tech-color: #929190;
+    --bg-tech-window: #685e5e;
 }
 
 body {
@@ -195,6 +201,7 @@ h1 {
 .btn_low {
     width: 100%;
     padding: 12px;
+    margin-bottom: 20px;
     background-color: var(--btn-low-color);
     color: #f9f8f8;
     border: none;
@@ -228,11 +235,111 @@ h1 {
     color: #f4e7de;
 }
 
-.registeration, .forgot-password {
+.technical {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.btn_tech {
+    width: 50%;
+    padding: 12px;
+    background-color: var(--btn-tech-color);
+    color: #f9f8f8;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin: 0 auto;
+}
+
+.btn_tech:hover {
+    opacity: 0.9;
+}
+
+.registeration {
     text-align: center;
     margin-top: 15px;
 }
 
-.forgot-password {
-    margin-top: 10px;
+
+
+
+
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-window {
+    position: relative;
+    background-color: var(--bg-tech-window);
+    border-radius: 10px;
+    padding: 40px;
+    width: 550px;
+    max-width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    color: var(--text-color);
+}
+
+.modal-window p {
+    margin: 2px;
+    font-size: 21px;
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+.btn-close {
+    position: absolute;
+    color: var(--text-color);
+    font-size: 25px;
+    right: 10px;
+    top: 4px;
+    border: none;
+    background: none;
+    opacity: 0.7;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+.email-link {
+    color: var(--btn-color);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.email-link:hover {
+    color: var(--btn-low-color);
+    text-decoration: underline;
+}
+
+.technical {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 0 30px;
+    box-sizing: border-box;
 }

@@ -10,5 +10,6 @@ urlpatterns = [
     path('logout/', views.logoutCastom, name='logout'),
     path('register/', views.register, name='register'),
     path('main_page/', views.home, name='mainp'),
-    path('new_pas/', views.home, name='new_pas'), # -
+    path('new_pas/', views.home, name='new_pas'),
+    path('runn/', views.run_p, name='run_p'), # удалить при проде
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
