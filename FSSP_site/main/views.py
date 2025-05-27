@@ -7,6 +7,7 @@ from .models import Card, FilterDate
 from django.utils import timezone
 from main.services.LLM.searcher import *
 from django.views.decorators.csrf import csrf_exempt
+from .services.api_parser import ArbitrAPIParser
 
 def register(request):
     context = {'msg': ""}
@@ -75,8 +76,8 @@ def home(request):
 
 # Для разрабокти в продакшене будет программа которая автоматически запускает
 def run_p(req):
-    # parser = ArbitrAPIParser(api_key="KAD_API_KEY")
-    # parser.run("2025-05-25", "2025-05-27")
+    parser = ArbitrAPIParser(api_key="KAD_API_KEY")
+    parser.run("2025-05-24", "2025-05-27")
     # llm
     analyze_parsed()
     return redirect('login')
