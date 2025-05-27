@@ -130,11 +130,11 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # для разработ
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-KAD_API_KEY = "c5ea214946e91d193ab47220c877e435&CaseNumber=А82-4356%2F2014"  # Ваш API ключ
+KAD_API_KEY = "really_secret_data"  # Ваш API ключ
 KAD_MAX_REQUESTS = 17  # Оставшееся количество запросов
 
-YANDEX_API_KEY = 'AQVNx5MHmH5Hqfhqm3RIXam8xy1zE3SN1seiCNZF'
-FOLDER_ID = 'b1gmogi5kl7jvign6303'
+YANDEX_API_KEY = 'really_secret_data'
+FOLDER_ID = 'really_secret_data'
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_BEAT_SCHEDULE = {
