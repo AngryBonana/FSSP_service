@@ -76,8 +76,8 @@ def home(request):
 
 # Для разрабокти в продакшене будет программа которая автоматически запускает
 def run_p(req):
-    parser = ArbitrAPIParser(api_key="KAD_API_KEY")
-    parser.run("2025-05-24", "2025-05-27")
+    # parser = ArbitrAPIParser(api_key="KAD_API_KEY")
+    # parser.run("2025-05-10", "2025-05-27")
     # llm
     analyze_parsed()
     return redirect('login')

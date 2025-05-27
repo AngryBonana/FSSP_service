@@ -80,7 +80,7 @@ def create_queries(folder_id: str, yandex_api_key: str, name: str, company: str,
     return default_queries
 
 
-def yandex_search(folder_id: str, yandex_api_key: str, queries: List[str], num_links: int = 10) -> List[str]:
+def yandex_search(folder_id: str, yandex_api_key: str, queries: List[str], num_links=30) -> List[str]:
     """Ищет ссылки на возможные соцсети представителя компании.
 
     Args:
@@ -119,7 +119,7 @@ def yandex_search(folder_id: str, yandex_api_key: str, queries: List[str], num_l
 
 
 def anylize_with_gpt(folder_id: str, yandex_api_key: str, links: List[str], name: str, company: str, city: str,
-                     post: str, num_links: int = 3) -> List[str]:
+                     post: str, num_links: int = 5) -> List[str]:
     """Анализирует прикрепленные ссылки с помощью gpt и возвращает наиболее полезные.
 
     Args:
@@ -195,7 +195,7 @@ def analyze_parsed():
 
     names_with_titles = Card.objects.all()
 
-    GPT_LINKS = 2
+    GPT_LINKS = 30
     for i in names_with_titles:
         tmp = str(i.Address).split(',')[3].split(' ')
         city = tmp[len(tmp) - 1]
