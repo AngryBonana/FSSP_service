@@ -1,15 +1,25 @@
 from celery import shared_task
-from api_parser import ArbitrAPIParser
 from django.conf import settings
 from datetime import datetime, date
 from ..models import Card
-from LLM.searcher import *
+from .api_parser import ArbitrAPIParser
+from .LLM.searcher import analyze_parsed
 
 @shared_task
 def run_arbitr_parser():
-    parser = ArbitrAPIParser(api_key=settings.ARBIR_API_KEY)
-    parser.run(date_from=date.today().strftime("%Y-%m-%d"))
-    analyze_parsed()
+    """
+    Задача для запуска парсера арбитражных дел
+    """
+    try:
+        parser = ArbitrAPIParser(
+            api_key=settings.KAD_API_KEY,
+            max_requests=settings.KAD_MAX_REQUESTS
+        )
+        parser.run(date_from=date.today().strftime("%Y-%m-%d"))
+        analyze_parsed()
+    except Exception as e:
+        print(f"Ошибка при выполнении парсера: {e}")
+        raise
 
 
 # For prodaction

@@ -10,10 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 import os
-
+from pathlib import Path
 from celery.schedules import crontab
+from dotenv import load_dotenv
+
+# Загрузка переменных окружения из .env файла
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-nn06w=2axomlj%mn0xm4-qp&dy8*rmb9hf-7t^0bj8#s4mhhm%'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.getenv('DEBUG', '0')))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # В продакшене заменить на реальные хосты
 
 
 # Application definition
@@ -109,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
@@ -121,7 +124,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # для разработки
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')    # для продакшена
 
@@ -130,16 +134,24 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # для разработ
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-KAD_API_KEY = "c5ea214946e91d193ab47220c877e435&CaseNumber=А82-4356%2F2014"  # Ваш API ключ
-KAD_MAX_REQUESTS = 17  # Оставшееся количество запросов
+# API Keys
+KAD_API_KEY = os.getenv('KAD_API_KEY')
+KAD_MAX_REQUESTS = int(os.getenv('KAD_MAX_REQUESTS', '17'))
+YANDEX_API_KEY = os.getenv('YANDEX_API_KEY')
+FOLDER_ID = os.getenv('FOLDER_ID')
 
-YANDEX_API_KEY = 'AQVNx5MHmH5Hqfhqm3RIXam8xy1zE3SN1seiCNZF'
-FOLDER_ID = 'b1gmogi5kl7jvign6303'
+# Celery Configuration
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+# Celery Beat Schedule
 CELERY_BEAT_SCHEDULE = {
     'run-daily-parser': {
-        'task': 'your_app.tasks.run_arbitr_parser',
-        'schedule': crontab(hour=8, minute=0),  # Каждый день в 8:00
+        'task': 'main.services.tasks.run_arbitr_parser',
+        'schedule': crontab(hour=8, minute=0),
     },
 }
