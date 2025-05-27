@@ -27,17 +27,25 @@
                          data-light="{% static 'All image/light-theme/Password.png' %}"
                          data-dark="{% static 'All image/dark-theme/Password_d.png' %}">
                 </div>
-                <div class="remember">
-                    <label for=""><input type="checkbox">Запомнить меня</label>
-                </div>
+                
                 <button type="submit" class="btn">Войти</button>
                 <div class="registeration">
                     <a href="{% url 'register' %}"><button type="button" class="btn_low">Зарегистрироваться</button></a>
                 </div>
-                <div class="forgot-password">
-                    <a href="{% url 'new_pas' %}"><button type="button" class="btn_low">Восстановить пароль</button></a>
-                </div>
             </form>
+            <div class="technical">
+                <button type="button" class="btn_tech">Техническая поддержка</button>
+                <div class="modal">
+                    <div class="modal-window">
+                        <h2>Техническая поддержка</h2>
+                        <p>По всем вопросам пишите на почту:
+                        <a href="mailto:ptwrew@yandex.ru" class="email-link">ptwrew@yandex.ru</a>
+                        </p>
+                        <p style="font-size: 15px;">Пожалуйста полностью опишите свою проблему</p>
+                        <button class="btn-close">x</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="animation-area">
             <div class="rotating-images">
@@ -56,5 +64,31 @@
         </div>
     </div>
     <script src="{% static 'js/theme.js' %}"></script>
+    <script>
+    const techBtn = document.querySelector('.btn_tech');
+    const modal = document.querySelector('.modal');
+    const closeBtn = document.querySelector('.btn-close');
+
+    techBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    const emailLink = document.querySelector('.email-link');
+    emailLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        const email = 'ptwrew@yandex.ru';
+        window.open(`https://mail.yandex.ru/?uid=0#compose?to=${encodeURIComponent(email)}`, '_blank');
+    });
+</script>
 </body>
 </html>
