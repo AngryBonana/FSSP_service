@@ -48,7 +48,7 @@
         <div class="option {% if forloop.first %}active{% endif %}">
           <div class="card-content">
             <h3>{{ card.title }}</h3>
-            <div class="card-text">{{ card.content|safe }}</div>
+            <div class="card-text" style="white-space: pre-line;">{{ card.content|safe }}</div>
           </div>
         </div>
       {% endfor %}
@@ -64,7 +64,6 @@
     <div class="contact">
       <p>Контакты: <a href="mailto:ptwrew@yandex.ru" class="email-link">ptwrew@yandex.ru</a></p>
     </div>
-    <button type="button" class="piano-key">Загрузить</button>
   </div>
 </body>
 </html>
