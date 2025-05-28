@@ -1,9 +1,7 @@
 import requests
-import os
 import json
 from typing import List
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 from main.models import Card
 from django.conf import settings
 import re
@@ -238,22 +236,3 @@ def analyze_parsed():
         i.content = i.content + f"{templ}{ans}"
         i.save()
         print(i.content)
-
-#   Пример использования
-# if __name__ == "__main__":
-#     load_dotenv()
-#
-#     yandex_api_key = os.getenv("YANDEX_API_KEY")
-#     folder_id = os.getenv("FOLDER_ID")
-#
-#     name = "Мешков Максим Николаевич"
-#     post = "Генеральный Директор"
-#     city = "Воронеж"
-#     company = 'ООО "РЕСТОР"'
-#
-#     queries = create_queries(folder_id=folder_id, yandex_api_key=yandex_api_key, name=name, company=company, city=city,
-#                              post=post)
-#
-#     links = yandex_search(folder_id=folder_id, yandex_api_key=yandex_api_key, queries=queries, num_links=30)
-#
-#     print(anylize_with_gpt(folder_id, yandex_api_key, links, name, company, city, post, num_links=10))

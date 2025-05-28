@@ -74,19 +74,7 @@ def home(request):
     context['current_filter_date'] = filter_date.strftime("%Y-%m-%d")
     return render(request, 'Front/Main Website/index.html', context)
 
-
-# Для разрабокти в продакшене будет программа которая автоматически запускает
-def run_p(req):
-    # parser = ArbitrAPIParser(api_key="KAD_API_KEY")
-    # parser.run("2025-05-10", "2025-05-27")
-    # llm
-    analyze_parsed()
-    return redirect('login')
-    # pass
-
 def start(request):
-    # if request.user.is_authenticated:
-    #     return redirect('mainp')
     return redirect('login')
 
 @login_required

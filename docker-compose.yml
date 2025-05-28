@@ -7,13 +7,8 @@ services:
       - "8000:8000"
     volumes:
       - ./FSSP_site:/app
-    environment:
-      - DEBUG=1
-      - ARBIR_API_KEY=c5ea214946e91d193ab47220c877e435
-      - YANDEX_API_KEY=AQVNx5MHmH5Hqfhqm3RIXam8xy1zE3SN1seiCNZF
-      - FOLDER_ID=b1gmogi5kl7jvign6303
-      - DJANGO_SETTINGS_MODULE=FSSP_site.settings
-      - PYTHONPATH=/app
+    env_file:
+      - .env
     depends_on:
       - redis
 
@@ -27,12 +22,8 @@ services:
     command: sh -c "cd /app && celery -A FSSP_site worker --loglevel=info"
     volumes:
       - ./FSSP_site:/app
-    environment:
-      - ARBIR_API_KEY=c5ea214946e91d193ab47220c877e435
-      - YANDEX_API_KEY=AQVNx5MHmH5Hqfhqm3RIXam8xy1zE3SN1seiCNZF
-      - FOLDER_ID=b1gmogi5kl7jvign6303
-      - DJANGO_SETTINGS_MODULE=FSSP_site.settings
-      - PYTHONPATH=/app
+    env_file:
+      - .env
     depends_on:
       - redis
       - web
@@ -42,12 +33,8 @@ services:
     command: sh -c "cd /app && celery -A FSSP_site beat --loglevel=info"
     volumes:
       - ./FSSP_site:/app
-    environment:
-      - ARBIR_API_KEY=c5ea214946e91d193ab47220c877e435
-      - YANDEX_API_KEY=AQVNx5MHmH5Hqfhqm3RIXam8xy1zE3SN1seiCNZF
-      - FOLDER_ID=b1gmogi5kl7jvign6303
-      - DJANGO_SETTINGS_MODULE=FSSP_site.settings
-      - PYTHONPATH=/app
+    env_file:
+      - .env
     depends_on:
       - redis
       - web 
