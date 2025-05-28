@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация на FindDeal</title>
+    <link type="image/x-icon" rel="shortcut icon" href="{% static 'All image/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/reg_style.css' %}">
+</head>
+<body>
+    <button type="button" class="btn_theme">Другая тема</button>
+    <div class="container">
+        <div class="form-wrapper">
+            <form method="post">
+            {% csrf_token %}
+
+            <h1>Регистрация</h1>
+
+            <div class="input-box">
+                <input id="username" name="username" type="text" placeholder="Логин" required>
+            </div>
+            <div class="input-box">
+                <input id="password1" name="password1" type="password" placeholder="Пароль" required>
+            </div>
+            <div class="input-box">
+                <input id="password2" name="password2" type="password" placeholder="Повторите пароль" required>
+            </div>
+
+            <div>
+                {{msg}}
+            </div>
+
+            <div class="registeration">
+                <button class="btn_low" type="submit">Зарегистрироваться</button>
+            </div>
+            </form>
+        </div>
+        <div class="animation-area">
+            <div class="rotating-images">
+                <img src="{% static 'All image/light-theme/Finder.png' %}" alt="Image 1" class="rotating-image"
+                     data-light="{% static 'All image/light-theme/Finder.png' %}"
+                     data-dark="{% static 'All image/dark-theme/Finder_d.png' %}">
+                <img src="{% static 'All image/light-theme/Document.png' %}" alt="Image 2" class="rotating-image"
+                     data-light="{% static 'All image/light-theme/Document.png' %}"
+                     data-dark="{% static 'All image/dark-theme/Document_d.png' %}">
+                <img src="{% static 'All image/light-theme/Hammer.png' %}" alt="Image 3" class="rotating-image"
+                     data-light="{% static 'All image/light-theme/Hammer.png' %}"
+                     data-dark="{% static 'All image/dark-theme/Hammer_d.png' %}">
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/theme.js' %}"></script>
+</body>
+</html>
