@@ -12,8 +12,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 from celery.schedules import crontab
+
+# Load environment variables
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-nn06w=2axomlj%mn0xm4-qp&dy8*rmb9hf-7t^0bj8#s4mhhm%'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-nn06w=2axomlj%mn0xm4-qp&dy8*rmb9hf-7t^0bj8#s4mhhm%')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -59,7 +63,7 @@ ROOT_URLCONF = 'FSSP_site.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'main', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,18 +135,42 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # для разработ
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # API Keys
-ARBIR_API_KEY = os.getenv('ARBIR_API_KEY', 'c5ea214946e91d193ab47220c877e435')  # Ваш API ключ
-KAD_MAX_REQUESTS = 17  # Оставшееся количество запросов
+ARBIR_API_KEY = os.getenv('ARBIR_API_KEY')
+KAD_MAX_REQUESTS = 20
 
-YANDEX_API_KEY = os.getenv('YANDEX_API_KEY', 'AQVNx5MHmH5Hqfhqm3RIXam8xy1zE3SN1seiCNZF')
-FOLDER_ID = os.getenv('FOLDER_ID', 'b1gmogi5kl7jvign6303')
+YANDEX_API_KEY = os.getenv('YANDEX_API_KEY')
+FOLDER_ID = os.getenv('FOLDER_ID')
 
 # Celery Configuration
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://redis:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://redis:6379/0')
 CELERY_BEAT_SCHEDULE = {
     'run-daily-parser': {
         'task': 'main.services.tasks.run_arbitr_parser',
         'schedule': crontab(hour=8, minute=0),  # Каждый день в 8:00
+    },
+}
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django.log'),
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    'django': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+        'propagate': True,
     },
 }

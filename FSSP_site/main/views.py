@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Card, FilterDate
 from django.utils import timezone
 from main.services.LLM.searcher import *
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 from .services.api_parser import ArbitrAPIParser
 
 def register(request):
@@ -27,20 +27,21 @@ def logoutCastom(req):
     logout(req)
     return redirect('home')
 
-@csrf_exempt
+@ensure_csrf_cookie
 def loginCastom(req):
     if req.method == 'POST':
         username = req.POST.get('username')
         password = req.POST.get('password')
-        if not req.user.is_authenticated:
-            messages.success(req, f'Неудачная попытка входа!')
+        
         # Проверяем аутентификацию
         user = authenticate(req, username=username, password=password)
         if user is not None:
             login(req, user)
-            return redirect('mainp')  # Перенаправляем на главную
+            messages.success(req, f'Добро пожаловать, {username}!')
+            return redirect('mainp')
         else:
             messages.error(req, 'Неверный логин или пароль')
+            return render(req, 'Front/Log_in/index.html')
 
     return render(req, 'Front/Log_in/index.html')
 
